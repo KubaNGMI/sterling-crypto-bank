@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T00:00:00Z",
+  "title": "Design System: Sterling Crypto Bank",
+  "extensions": {
+    "colorMeta": {
+      "signal-indigo": {
+        "role": "primary",
+        "displayName": "Signal Indigo",
+        "canonical": "#6366f1",
+        "tonalRamp": ["#1e1b4b", "#2e2a6b", "#3f3a97", "#4f46c9", "#6366f1", "#8288f5", "#a5a9f8", "#cbcefb"]
+      },
+      "indigo-deep": {
+        "role": "primary",
+        "displayName": "Indigo Deep",
+        "canonical": "#4f46e5",
+        "tonalRamp": ["#1a1650", "#241f70", "#332b9c", "#413ac2", "#4f46e5", "#6f67ee", "#9a95f4", "#c4c1fa"]
+      },
+      "void": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#0c0c14",
+        "tonalRamp": ["#050508", "#0c0c14", "#131320", "#1c1c2e", "#26263a", "#3a3a52", "#5a5a75", "#8b8b9e"]
+      },
+      "deep-slate": {
+        "role": "neutral",
+        "displayName": "Deep Slate",
+        "canonical": "#121220",
+        "tonalRamp": ["#070710", "#0d0d18", "#121220", "#1a1a2b", "#242438", "#37374d", "#56566e", "#87879b"]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#171725",
+        "tonalRamp": ["#0c0c14", "#131320", "#171725", "#1c1c2e", "#26263a", "#333349", "#4a4a63", "#6b6b85"]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well",
+        "canonical": "#1c1c2e",
+        "tonalRamp": ["#0e0e18", "#151522", "#1c1c2e", "#24243a", "#2e2e47", "#40405a", "#5a5a75", "#8888a0"]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#26263a",
+        "tonalRamp": ["#141420", "#1c1c2e", "#26263a", "#33334a", "#41415c", "#55556f", "#6f6f88", "#9494a8"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f4f4f8",
+        "tonalRamp": ["#5a5a68", "#7c7c8c", "#9c9caf", "#bcbcc9", "#d6d6e0", "#e6e6ee", "#f4f4f8", "#ffffff"]
+      },
+      "muted-lilac": {
+        "role": "neutral",
+        "displayName": "Muted Lilac",
+        "canonical": "#8b8b9e",
+        "tonalRamp": ["#33333f", "#454553", "#5a5a6b", "#707083", "#8b8b9e", "#a5a5b5", "#c2c2ce", "#e0e0e8"]
+      },
+      "gain-green": {
+        "role": "semantic",
+        "displayName": "Gain Green",
+        "canonical": "#22c55e",
+        "tonalRamp": ["#052e16", "#0a4022", "#116233", "#178f48", "#22c55e", "#4ade80", "#86efac", "#bbf7d0"]
+      },
+      "loss-red": {
+        "role": "semantic",
+        "displayName": "Loss Red",
+        "canonical": "#ef4444",
+        "tonalRamp": ["#450a0a", "#611414", "#8f1d1d", "#c62828", "#ef4444", "#f87171", "#fca5a5", "#fecaca"]
+      },
+      "bitcoin-amber": {
+        "role": "semantic",
+        "displayName": "Bitcoin Amber",
+        "canonical": "#f7931a",
+        "tonalRamp": ["#3d2506", "#5c380a", "#8a5310", "#c17318", "#f7931a", "#f9ad4f", "#fbc784", "#fde0b8"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The single hero monetary figure on a view (e.g. My Wallet total)." },
+      "headline": { "displayName": "Headline", "purpose": "Card totals and page titles; 26px, weight 700 (600 for page titles)." },
+      "title": { "displayName": "Title", "purpose": "Section headings inside cards." },
+      "body": { "displayName": "Body", "purpose": "Table cells, holdings rows, general copy; inputs run 14.5px." },
+      "label": { "displayName": "Label", "purpose": "Field labels, table headers, chart captions; always Muted Lilac. Badge variant is 11.5px/700 uppercase." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)", "purpose": "Default glass card: wide dark haze plus a 1px inner top highlight." },
+      { "name": "overlay", "value": "0 16px 40px rgba(0,0,0,0.45)", "purpose": "Dropdown menus and select panels." },
+      { "name": "auth-card", "value": "0 20px 60px rgba(0,0,0,0.35)", "purpose": "Taller drop under solid auth cards." },
+      { "name": "accent-glow", "value": "0 8px 24px rgba(99,102,241,0.35)", "purpose": "LEGACY. Gradient primary buttons and the swap FAB. Retired for new work under the Quiet Exchange direction." }
+    ],
+    "motion": [
+      { "name": "state", "value": "0.15s ease", "purpose": "Default for border, background, and transform state changes." },
+      { "name": "settle", "value": "0.26s cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Post-load content fade + 6px rise, once (.settle). Guarded by prefers-reduced-motion." },
+      { "name": "route-fade", "value": "0.18s ease-out", "purpose": "Cross-fade on route change (.route-fade), keyed by pathname." },
+      { "name": "load-floor", "value": "450ms", "purpose": "Minimum time a first data load holds its loading state (withMinDuration). A floor, not an added delay." },
+      { "name": "toggle", "value": "0.3s cubic-bezier(0.65, 0, 0.35, 1)", "purpose": "The sliding Buy/Sell pill." },
+      { "name": "pop-in", "value": "0.14s ease", "purpose": "Select panel and mobile-menu entrance." },
+      { "name": "orbit", "value": "14s / 9s-reverse linear infinite", "purpose": "WalletOrbit rotation. Guarded by prefers-reduced-motion (stops, not restyled)." }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "1000px" },
+      { "name": "md", "value": "900px" },
+      { "name": "nav", "value": "768px" },
+      { "name": "sm", "value": "700px" },
+      { "name": "xs", "value": "560px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (dashboard)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main dashboard action (Buy Coin, Add Funds, Submit for Verification). Flat --accent fill, hover to indigo-deep, no gradient / glow / lift.",
+      "html": "<button class=\"ds-btn-primary\">Buy Coin</button>",
+      "css": ".ds-btn-primary { display: block; width: 220px; padding: 15px; border: none; border-radius: 12px; background: #6366f1; color: #fff; font: 600 15px/1 Inter, system-ui, sans-serif; transition: background 0.15s; } .ds-btn-primary:hover { background: #4f46e5; } .ds-btn-primary:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Bottom Tab Bar (mobile)",
+      "kind": "nav",
+      "refersTo": "nav-link-active",
+      "description": "Below 768px the sidebar is replaced by this fixed bottom bar of the four primary routes. Icon over 12.5px label; active route in Signal Indigo with a 2px top indicator.",
+      "html": "<nav class=\"ds-tabbar\"><a class=\"ds-tab ds-tab--active\" href=\"#\"><svg viewBox=\"0 0 16 16\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"10.7\" height=\"10.7\" rx=\"1.3\"/><path d=\"M2.7 8H8M8 10h5.3M8 6h5.3M8 2.7v10.6\"/></svg><span>Dashboard</span></a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 16 16\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12.7 10.7v2c0 .7-.6 1.3-1.3 1.3H4c-.7 0-1.3-.6-1.3-1.3V4c0-.7.6-1.3 1.3-1.3h7.3V5.3M2.7 4c0 .7.6 1.3 1.3 1.3h8c.4 0 .7.3.7.7v2\"/><path d=\"M13.3 8v2.7h-2.7c-.7 0-1.3-.6-1.3-1.3s.6-1.3 1.3-1.3h2.7Z\"/></svg><span>My Wallet</span></a></nav>",
+      "css": ".ds-tabbar { display: flex; justify-content: space-around; gap: 4px; padding: 8px; background: rgba(28,28,46,0.65); backdrop-filter: blur(20px) saturate(180%); border-top: 1px solid rgba(255,255,255,0.09); } .ds-tab { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 0; border-radius: 12px; color: #8b8b9e; font: 600 12.5px/1 Inter, system-ui, sans-serif; text-decoration: none; transition: color 0.15s; } .ds-tab--active { color: #6366f1; } .ds-tab--active::before { content: \"\"; position: absolute; top: 0; width: 18px; height: 2px; border-radius: 999px; background: #6366f1; }"
+    },
+    {
+      "name": "Empty State",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "The one no-data pattern for a card. Drawn line-icon in a 44px chip, 14px title, ~34ch hint, optional quiet-button action (router link or onClick).",
+      "html": "<div class=\"ds-empty\"><span class=\"ds-empty__icon\"><svg viewBox=\"0 0 16 16\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><ellipse cx=\"6\" cy=\"4.3\" rx=\"4\" ry=\"2.1\"/><path d=\"M2 4.3v3.4C2 8.9 3.8 9.8 6 9.8s4-.9 4-2.1V4.3\"/><path d=\"M6 9.8v3.4c0 1.2 1.8 2.1 4 2.1s4-.9 4-2.1V8.6\"/><path d=\"M10 6.5c2.2 0 4 .9 4 2.1s-1.8 2.1-4 2.1\"/></svg></span><p class=\"ds-empty__title\">No holdings yet</p><p class=\"ds-empty__hint\">Coins you buy show up here with their live value.</p><a class=\"ds-empty__action\" href=\"#\">Trade on Exchange</a></div>",
+      "css": ".ds-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 44px 24px; } .ds-empty__icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-bottom: 6px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); color: #8b8b9e; } .ds-empty__title { margin: 0; color: #f4f4f8; font: 600 14px/1.3 Inter, system-ui, sans-serif; } .ds-empty__hint { margin: 0; max-width: 34ch; color: #8b8b9e; font: 400 12.5px/1.5 Inter, system-ui, sans-serif; } .ds-empty__action { margin-top: 12px; padding: 9px 18px; border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; color: #6366f1; font: 600 13px/1 Inter, system-ui, sans-serif; text-decoration: none; transition: border-color 0.15s, background 0.15s; } .ds-empty__action:hover { border-color: #6366f1; background: rgba(255,255,255,0.04); }"
+    },
+    {
+      "name": "Loading Skeleton",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Shimmer placeholder inside a fetching card — replaces an orphan \"Loading…\" line. Guarded by prefers-reduced-motion.",
+      "html": "<div class=\"ds-skel\"><div class=\"ds-skel__row\"></div><div class=\"ds-skel__row\"></div><div class=\"ds-skel__row\"></div><div class=\"ds-skel__row\"></div></div>",
+      "css": ".ds-skel { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 18px 0; min-height: 216px; } .ds-skel__row { height: 16px; border-radius: 8px; background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.07) 37%, rgba(255,255,255,0.03) 63%); background-size: 400% 100%; animation: ds-skel-shimmer 1.4s ease infinite; } .ds-skel__row:nth-child(1) { width: 70%; } .ds-skel__row:nth-child(2) { width: 100%; } .ds-skel__row:nth-child(3) { width: 85%; } .ds-skel__row:nth-child(4) { width: 60%; } @keyframes ds-skel-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } } @media (prefers-reduced-motion: reduce) { .ds-skel__row { animation: none; } }"
+    },
+    {
+      "name": "Confirm Panel",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "The review beat before a money action commits (Buy/Sell, Add Funds, admin ledger). Replaces the primary button with a summary + Back / Confirm.",
+      "html": "<div class=\"ds-confirm\"><p class=\"ds-confirm__title\">Review your sell</p><dl class=\"ds-confirm__rows\"><div><dt>Action</dt><dd>Sell BTC</dd></div><div><dt>You sell</dt><dd>0.182400 BTC</dd></div><div><dt>Total</dt><dd>$14,409.60</dd></div></dl><div class=\"ds-confirm__actions\"><button class=\"ds-confirm__back\">Back</button><button class=\"ds-confirm__confirm\">Confirm sell</button></div></div>",
+      "css": ".ds-confirm { margin-top: 20px; padding: 16px; border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; background: rgba(255,255,255,0.03); font-family: Inter, system-ui, sans-serif; } .ds-confirm__title { margin: 0 0 12px; font-size: 13px; font-weight: 600; color: #8b8b9e; } .ds-confirm__rows { display: flex; flex-direction: column; gap: 10px; margin: 0 0 16px; } .ds-confirm__rows > div { display: flex; justify-content: space-between; gap: 16px; font-size: 13.5px; } .ds-confirm__rows dt { color: #8b8b9e; } .ds-confirm__rows dd { margin: 0; font-weight: 600; text-align: right; } .ds-confirm__actions { display: flex; gap: 10px; } .ds-confirm__back { flex: 1; padding: 12px; border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; background: none; color: #8b8b9e; font: 600 14px/1 Inter, system-ui, sans-serif; } .ds-confirm__back:hover { color: #f4f4f8; border-color: #6366f1; } .ds-confirm__confirm { flex: 2; padding: 12px; border: none; border-radius: 12px; background: #6366f1; color: #fff; font: 600 15px/1 Inter, system-ui, sans-serif; } .ds-confirm__confirm:hover { background: #4f46e5; }"
+    },
+    {
+      "name": "Auth Button",
+      "kind": "button",
+      "refersTo": "button-auth",
+      "description": "Primary action on Login / Create Account. Flat accent fill, full pill, trailing chevron. Already on-target for the Quiet Exchange.",
+      "html": "<button class=\"ds-btn-auth\">Next <span class=\"ds-btn-auth__arrow\">›</span></button>",
+      "css": ".ds-btn-auth { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 28px; border: none; border-radius: 999px; background: #6366f1; color: #fff; font: 700 15px/1 Inter, system-ui, sans-serif; transition: background 0.15s; } .ds-btn-auth:hover { background: #4f46e5; } .ds-btn-auth:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; } .ds-btn-auth__arrow { font-size: 18px; line-height: 1; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Back / cancel action. Transparent with a hairline border; border and text shift toward accent on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Back</button>",
+      "css": ".ds-btn-secondary { padding: 14px 28px; border: 1px solid #26263a; border-radius: 999px; background: transparent; color: #8b8b9e; font: 600 14.5px/1 Inter, system-ui, sans-serif; transition: color 0.15s, border-color 0.15s; } .ds-btn-secondary:hover { color: #f4f4f8; border-color: #6366f1; } .ds-btn-secondary:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Dashboard field. Faint white fill, hairline border, border shifts to accent on focus-within — no glow, no ring.",
+      "html": "<label class=\"ds-field\"><input class=\"ds-field__input\" type=\"text\" placeholder=\"Search...\" /></label>",
+      "css": ".ds-field { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 12px 16px; transition: border-color 0.15s, background 0.15s; } .ds-field:focus-within { border-color: #6366f1; background: rgba(255,255,255,0.06); } .ds-field__input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #f4f4f8; font: 400 14.5px/1.4 Inter, system-ui, sans-serif; } .ds-field__input::placeholder { color: #8b8b9e; }"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The base surface for every dashboard module. Frosted translucency over the ambient field, hairline border, a light-line along the top edge.",
+      "html": "<div class=\"ds-card\"><p class=\"ds-card__label\">Total Balance</p><h2 class=\"ds-card__figure\">$48,240.19</h2></div>",
+      "css": ".ds-card { position: relative; overflow: hidden; background: rgba(23,23,37,0.55); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255,255,255,0.09); border-radius: 20px; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06); } .ds-card::before { content: \"\"; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); } .ds-card__label { margin: 0 0 6px; color: #8b8b9e; font: 500 12.5px/1.4 Inter, system-ui, sans-serif; } .ds-card__figure { margin: 0; color: #f4f4f8; font: 700 32px/1.1 Inter, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link-active",
+      "description": "Sidebar navigation item. Muted at rest; active state is white text on a right-to-left indigo gradient that bleeds to the panel edges.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav__link ds-nav__link--active\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/></svg>Dashboard</a><a class=\"ds-nav__link\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 7h18v12H3z\"/><path d=\"M16 12h.01\"/></svg>My Wallet</a></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; gap: 4px; width: 200px; padding: 20px; background: linear-gradient(180deg, rgba(100,115,254,0.10) 0%, rgba(12,12,20,0) 45%), #121220; } .ds-nav__link { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; color: #8b8b9e; font: 500 14.5px/1 Inter, system-ui, sans-serif; text-decoration: none; transition: color 0.15s, background 0.15s; } .ds-nav__link:hover { color: #f4f4f8; background: #171725; } .ds-nav__link--active { color: #fff; border-radius: 0; margin: 0 -20px; padding-left: 34px; background: linear-gradient(270deg, #6473FE, transparent); }"
+    },
+    {
+      "name": "Type Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Transaction type / verification status tag. 15%-opacity semantic fill with matching text, uppercase, full pill. Recolor per meaning: buy=indigo, sell=red, deposit=green, withdrawal=amber.",
+      "html": "<span class=\"ds-badge ds-badge--buy\">buy</span> <span class=\"ds-badge ds-badge--sell\">sell</span> <span class=\"ds-badge ds-badge--deposit\">deposit</span> <span class=\"ds-badge ds-badge--withdrawal\">withdrawal</span>",
+      "css": ".ds-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font: 700 11.5px/1.4 Inter, system-ui, sans-serif; text-transform: uppercase; } .ds-badge--buy { background: rgba(99,102,241,0.15); color: #6366f1; } .ds-badge--sell { background: rgba(239,68,68,0.15); color: #ef4444; } .ds-badge--deposit { background: rgba(34,197,94,0.15); color: #22c55e; } .ds-badge--withdrawal { background: rgba(247,147,26,0.15); color: #f7931a; }"
+    },
+    {
+      "name": "Buy / Sell Toggle",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "Two-option segmented control. A solid accent pill slides behind the labels on a spring curve; inactive label is muted, active is white.",
+      "html": "<div class=\"ds-toggle\" data-mode=\"buy\"><span class=\"ds-toggle__pill\"></span><button class=\"ds-toggle__btn ds-toggle__btn--active\">Buy</button><button class=\"ds-toggle__btn\">Sell</button></div>",
+      "css": ".ds-toggle { position: relative; display: flex; width: 240px; padding: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; } .ds-toggle__pill { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); background: #6366f1; border-radius: 9px; transition: transform 0.3s cubic-bezier(0.65,0,0.35,1); } .ds-toggle[data-mode=\"sell\"] .ds-toggle__pill { transform: translateX(100%); } .ds-toggle__btn { position: relative; z-index: 1; flex: 1; padding: 10px 0; border: none; background: none; color: #8b8b9e; font: 600 14px/1 Inter, system-ui, sans-serif; transition: color 0.25s; } .ds-toggle__btn--active { color: #fff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Exchange",
+    "overview": "Sterling Crypto Bank is a trading floor with the volume turned down. The surface is a near-black indigo canvas lit only by two soft glow blobs drifting behind everything; frosted glass panels float over it, each caught by a single hairline of light along its top edge. Nothing on screen competes with the numbers. Chrome recedes, color is rationed, and the eye lands on a balance figure or a price delta because that is the largest, brightest thing in view.\n\nThe controls read like instruments, not toys. Borders are crisp single-pixel strokes, focus is a quiet border-shift rather than a glow, transitions are short and matter-of-fact (0.15s), and fills are flat --accent — the gradient buttons and accent-glow shadows of the first draft have been retired. Two continuous motions survive as signature, not decoration: the swap control's 180° flip and the wallet's slow orbit, both guarded by prefers-reduced-motion. The direction stays calm: flat fills, diffuse depth, restraint.\n\nDepth is atmospheric. It comes from translucency, a 24px backdrop-blur, and the colored haze behind the glass — never from hard shadows. A card at rest looks like it is sunk into fog, not stamped onto paper.",
+    "keyCharacteristics": [
+      "Near-black indigo canvas (#0c0c14) with two fixed ambient glow blobs — indigo top-left, green bottom-right — blurred 90px.",
+      "Frosted glass cards: backdrop-filter: blur(24px) saturate(180%), 9%-white border, a ::before top light-line.",
+      "One interactive hue: Signal Indigo #6366f1. Everything else is neutral or a financial semantic.",
+      "Green / red carry polarity only; Bitcoin Amber marks BTC, withdrawals, and pending status.",
+      "Data-forward: large tabular monetary figures, borderless rules-only tables, minimal surrounding chrome.",
+      "Instrument controls: hairline borders, :focus-within border-shift, 0.15s transitions."
+    ],
+    "rules": [
+      { "name": "The One Hue Rule", "body": "Signal Indigo is the only decorative color on any view. Green, red, and amber appear only to carry financial or status meaning — never to add visual interest.", "section": "colors" },
+      { "name": "The Token Pair Rule", "body": "Positive is --green (#22c55e), negative is --red (#ef4444) everywhere, feedback text included, with matching rgba(34,197,94,·) / rgba(239,68,68,·) tint fills. Don't reach for the brighter #4ade80 / #f87171 pair; it isn't a second palette.", "section": "colors" },
+      { "name": "The Figure-First Rule", "body": "The monetary total is the largest type on its view (26–32px / 700). Every label around it drops to 12.5px Muted Lilac. Hierarchy is carried by the numbers, not by headings.", "section": "typography" },
+      { "name": "The Atmospheric Rule", "body": "Depth comes from blur, translucency, and the ambient blobs — never a hard drop shadow. Card shadows are wide and low-alpha; if a shadow reads as a crisp edge, it is wrong.", "section": "elevation" },
+      { "name": "The Radius Scale Rule", "body": "New work uses one of six steps — 20 / 18 / 12 / 10 / 8 / pill. The working triad is 20px card, 12px control, pill badge; reach for 10px or 8px only to match an existing compact neighbour.", "section": "shapes" },
+      { "name": "The Border-Shift Focus Rule", "body": "Fields never glow or ring on focus; the 1px border shifts to Signal Indigo via :focus-within, 0.15s.", "section": "components" }
+    ],
+    "dos": [
+      "Do compose every surface from the glass .card over the dark ambient-blob body, and keep the ::before top light-line.",
+      "Do keep Signal Indigo (#6366f1) for interactive and brand use only; green / red for financial polarity, amber for BTC / withdrawal / pending.",
+      "Do color monetary deltas by sign and use the 15%-tint pill for every type / status badge.",
+      "Do make :focus-within border-shift to --accent the single focus treatment, and keep state transitions at 0.15s.",
+      "Do hold the layout frame: 1400px max width, 220px sidebar / mobile bars below 768px, 24px section gap, 28px card padding.",
+      "Do set the monetary figure as the largest type on its view (26–32px / 700).",
+      "Do give every fetching card a CardLoading skeleton and every no-data card an EmptyState — never an orphan Loading / None-yet line.",
+      "Do draw icons as inline SVG (currentColor, ~1.1 stroke); the incumbent emoji glyphs are legacy, not the pattern for new work.",
+      "Do keep the deliberate feel: floor loads at ~450ms, .settle post-load content in place, and route a money action through ConfirmPanel before it writes."
+    ],
+    "donts": [
+      "Don't add a radius outside the six-step scale (20 / 18 / 12 / 10 / 8 / pill); default to the 20 / 12 / pill triad.",
+      "Don't use the brighter #4ade80 / #f87171 pair — feedback text is --green / --red with matching rgba(34,197,94,·) / rgba(239,68,68,·) tints.",
+      "Don't reach for gradient fills or accent-glow shadows — primary buttons and the swap control are flat --accent, hover #4f46e5.",
+      "Don't ship an animation without a prefers-reduced-motion guard (the orbit, the skeleton shimmer, and the swap rotate each have one).",
+      "Don't resurrect src/App.css (deleted — unused Vite-template leftovers), and keep favicon.svg on the infinity / chain lockup."
+    ]
+  }
+}
