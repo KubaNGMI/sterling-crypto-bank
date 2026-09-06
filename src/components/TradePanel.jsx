@@ -54,7 +54,7 @@ function CoinSelect({ value, onChange, options }) {
   );
 }
 
-export default function TradePanel({ onTradeComplete, balance = 0 }) {
+export default function TradePanel({ onTradeComplete, balance = 0, holdings = [] }) {
   const { user } = useAuth();
   const [mode, setMode] = useState("buy");
   const [fromSymbol, setFromSymbol] = useState("USD");
@@ -88,6 +88,26 @@ export default function TradePanel({ onTradeComplete, balance = 0 }) {
     setToSymbol(fromSymbol);
   }
 
+  const heldAmount = (symbol) =>
+    holdings.find((h) => h.symbol === symbol)?.amount ?? 0;
+
+  // Whatever sits on the "From" side is what gets spent: cash for a buy, the
+  // coin itself for a sell or a coin↔coin swap. Returns an error string when
+  // the user doesn't have it, otherwise null.
+  function checkFunds() {
+    if (fromCoin.isCash) {
+      if (usdValue > balance) {
+        return `Insufficient cash — you have ${formatUsd(balance)}, this trade needs ${formatUsd(usdValue)}.`;
+      }
+      return null;
+    }
+    const held = heldAmount(fromSymbol);
+    if (amountNum > held) {
+      return `Insufficient ${fromSymbol} — you have ${held.toFixed(6)}, this trade needs ${amountNum.toFixed(6)}.`;
+    }
+    return null;
+  }
+
   // Step 1: validate, then move to the review beat — no order is placed here.
   function startReview() {
     setFeedback(null);
@@ -97,14 +117,24 @@ export default function TradePanel({ onTradeComplete, balance = 0 }) {
     if (!usdValue || usdValue <= 0) {
       return setFeedback({ type: "error", text: "Enter an amount to trade." });
     }
-    if (effectiveMode === "buy" && usdValue > balance) {
-      return setFeedback({ type: "error", text: "Insufficient balance for this trade." });
+    const shortfall = checkFunds();
+    if (shortfall) {
+      return setFeedback({ type: "error", text: shortfall });
     }
     setConfirming(true);
   }
 
   // Step 2: the trade is only written after the user confirms the review.
   async function handleTrade() {
+    // Re-check here too — prices (and so the USD value) move while the review
+    // panel is open, and the balance may have changed in another tab.
+    const shortfall = checkFunds();
+    if (shortfall) {
+      setConfirming(false);
+      setFeedback({ type: "error", text: shortfall });
+      return;
+    }
+
     setSubmitting(true);
     const signedAmount = effectiveMode === "buy" ? -usdValue : usdValue;
 

@@ -1,5 +1,6 @@
 import { useTransactions } from "../hooks/useTransactions";
 import { calculateBalance } from "../utils/transactions";
+import { calculateHoldings } from "../utils/holdings";
 import TrendingMarket from "../components/TrendingMarket";
 import TransactionHistory from "../components/TransactionHistory";
 import TradePanel from "../components/TradePanel";
@@ -7,6 +8,7 @@ import TradePanel from "../components/TradePanel";
 export default function Exchange() {
   const { transactions, loading, error, refetch } = useTransactions();
   const balance = calculateBalance(transactions);
+  const holdings = calculateHoldings(transactions);
 
   return (
     <div>
@@ -31,7 +33,11 @@ export default function Exchange() {
           <TransactionHistory transactions={transactions} loading={loading} />
         </div>
         <div className="exchange-right">
-          <TradePanel onTradeComplete={refetch} balance={balance} />
+          <TradePanel
+            onTradeComplete={refetch}
+            balance={balance}
+            holdings={holdings}
+          />
         </div>
       </div>
 

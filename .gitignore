@@ -30,3 +30,6 @@ dist-ssr
 
 # Personal Claude Code settings (hooks wiring) — not shared
 .claude/settings.local.json
+
+# Impeccable design-hook per-session cache (machine-local, churns constantly)
+.impeccable/hook.cache.json

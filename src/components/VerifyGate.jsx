@@ -1,14 +1,29 @@
 import { Link } from "react-router-dom";
 import { useAccountStatus } from "../hooks/useAccountStatus";
 import { useIsAdmin } from "../hooks/useIsAdmin";
+import CardLoading from "./CardLoading";
 
 // Wraps a feature card. Renders its children once the account is verified
 // (admins always pass); otherwise swaps in a lock panel in the same card slot.
+//
+// Fails closed: while the account status is still loading the feature stays
+// covered, so an unverified user never gets a working panel in the gap before
+// their profile resolves.
 export default function VerifyGate({ children, feature = "this feature", className = "" }) {
   const { status, verified, loading } = useAccountStatus();
   const isAdmin = useIsAdmin();
 
-  if (loading || verified || isAdmin) return children;
+  if (isAdmin) return children;
+
+  if (loading) {
+    return (
+      <div className={"card verify-gate " + className}>
+        <CardLoading label="Checking your account" rows={3} />
+      </div>
+    );
+  }
+
+  if (verified) return children;
 
   const inReview = status === "pending";
 

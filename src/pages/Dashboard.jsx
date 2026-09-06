@@ -115,7 +115,11 @@ export default function Dashboard() {
 
       <div className="bottom-row">
         <TrendingMarket />
-        <TradePanel onTradeComplete={refetch} balance={cashBalance} />
+        <TradePanel
+          onTradeComplete={refetch}
+          balance={cashBalance}
+          holdings={holdings}
+        />
       </div>
     </div>
   );
