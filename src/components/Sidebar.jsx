@@ -404,7 +404,7 @@ export default function Sidebar() {
           transition: color .15s;
         }
         .mobile-tab__icon { width: 20px; height: 20px; }
-        .mobile-tab.active { color: var(--accent); }
+        .mobile-tab.active { color: var(--accent-text); }
         .mobile-tab.active::before {
           content: "";
           position: absolute;

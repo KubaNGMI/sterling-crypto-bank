@@ -114,7 +114,6 @@ export default function AdminMessages({ users, usersLoading }) {
 
       <style>{`
         .msg-card { max-width: 520px; }
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 6px; }
         .msg-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
 
         .msg-form { display: flex; flex-direction: column; gap: 12px; }

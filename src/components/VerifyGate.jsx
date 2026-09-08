@@ -83,7 +83,7 @@ export default function VerifyGate({ children, feature = "this feature", classNa
           margin-top: 12px;
           font-size: 13px;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--accent-text);
           border: 1px solid var(--glass-border);
           border-radius: 12px;
           padding: 9px 18px;

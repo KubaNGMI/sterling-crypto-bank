@@ -112,7 +112,7 @@ export default function AdminUsers({ users, loading, error, onRefetch, onUpdateS
           justify-content: space-between;
           margin-bottom: 4px;
         }
-        .label { color: var(--text-muted); font-size: 14px; }
+        .label { margin-bottom: 0; }
         .admin-error {
           margin: 12px 0;
           font-size: 13px;
@@ -167,7 +167,7 @@ export default function AdminUsers({ users, loading, error, onRefetch, onUpdateS
         }
         .ghost-btn:hover { color: var(--text); border-color: var(--accent); }
         .ghost-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .ghost-btn--accent { color: var(--accent); }
+        .ghost-btn--accent { color: var(--accent-text); }
       `}</style>
     </div>
   );

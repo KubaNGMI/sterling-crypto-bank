@@ -125,7 +125,7 @@ export default function VerificationUpload({ verification, onComplete }) {
       </button>
 
       <style>{`
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+        .label { margin-bottom: 12px; }
 
         .prototype-notice {
           background: var(--wash-amber);
@@ -183,28 +183,11 @@ export default function VerificationUpload({ verification, onComplete }) {
         .upload-filename {
           margin-top: 6px;
           font-size: 12.5px;
-          color: var(--accent);
+          color: var(--accent-text);
           font-weight: 600;
         }
 
-        .feedback-success {
-          margin-top: 16px;
-          font-size: 13px;
-          color: var(--green);
-          background: var(--wash-green);
-          border: 1px solid var(--wash-green-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
-        .feedback-error {
-          margin-top: 16px;
-          font-size: 13px;
-          color: var(--red);
-          background: var(--wash-red);
-          border: 1px solid var(--wash-red-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
+        .feedback-success, .feedback-error { margin-top: 16px; }
 
         .submit-btn {
           width: 100%;

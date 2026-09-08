@@ -237,7 +237,7 @@ export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 12px;
           }
-          .label { color: var(--text-muted); font-size: 13px; margin-bottom: 12px; }
+          .label { margin-bottom: 12px; }
           .drawer__muted { color: var(--text-muted); font-size: 13px; }
           .drawer__err {
             margin-top: 10px; font-size: 12.5px; color: var(--red);
@@ -275,7 +275,7 @@ export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
           .doc-chip {
             display: flex; align-items: center; gap: 10px;
             font-family: inherit; font-size: 13px; font-weight: 500;
-            color: var(--accent);
+            color: var(--accent-text);
             background: var(--fill);
             border: 1px solid var(--glass-border);
             border-radius: 10px;

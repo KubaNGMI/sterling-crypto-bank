@@ -32,6 +32,20 @@ const COIN_IDS = {
   cardano: { symbol: "ADA", name: "Cardano", icon: adaIcon, color: "#0033ad" },
 };
 
+// The card shell all three states share, so the heading and its rule are
+// declared once. <h2> matches the sibling cards on the dashboard row.
+function MarketCard({ children }) {
+  return (
+    <div className="card market-card">
+      <h2 className="market-title">Trending Market</h2>
+      {children}
+      <style>{`
+        .market-title { font-size: 17px; font-weight: 600; margin-bottom: 24px; }
+      `}</style>
+    </div>
+  );
+}
+
 export default function TrendingMarket() {
   const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,16 +112,16 @@ export default function TrendingMarket() {
 
   if (loading) {
     return (
-      <div className="card market-card">
-        <h3 className="market-title">Trending Market</h3>
+      <MarketCard>
         <div className="market-skeleton" aria-hidden="true">
           {Array.from({ length: 5 }).map((_, i) => (
             <div className="skeleton-row" key={i} />
           ))}
         </div>
-        <span className="sr-only">Loading market data…</span>
+        <span className="sr-only" role="status">
+          Loading market data…
+        </span>
         <style>{`
-          .market-title { font-size: 17px; font-weight: 600; margin-bottom: 24px; }
           .market-skeleton { display: flex; flex-direction: column; }
           .skeleton-row {
             height: 20px;
@@ -130,39 +144,33 @@ export default function TrendingMarket() {
             .skeleton-row { animation: none; }
           }
         `}</style>
-      </div>
+      </MarketCard>
     );
   }
 
   if (error) {
     return (
-      <div className="card market-card">
-        <h3 className="market-title">Trending Market</h3>
+      <MarketCard>
         <EmptyState
           icon={emptyIcons.alert}
           title="Couldn't load market prices"
           hint="The price service didn't respond. It's usually back within a minute."
           action={{ label: "Try again", onClick: retry }}
         />
-        <style>{`
-          .market-title { font-size: 17px; font-weight: 600; margin-bottom: 24px; }
-        `}</style>
-      </div>
+      </MarketCard>
     );
   }
 
   return (
-    <div className="card market-card">
-      <h3 className="market-title">Trending Market</h3>
-
+    <MarketCard>
       <table className="market-table">
         <thead>
           <tr>
-            <th>Token</th>
-            <th>Symbol</th>
-            <th>24H Change</th>
-            <th>Last Price</th>
-            <th>Market Cap</th>
+            <th scope="col">Token</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">24H Change</th>
+            <th scope="col">Last Price</th>
+            <th scope="col">Market Cap</th>
           </tr>
         </thead>
         <tbody>
@@ -192,7 +200,6 @@ export default function TrendingMarket() {
       </table>
 
       <style>{`
-        .market-title { font-size: 17px; font-weight: 600; margin-bottom: 24px; }
         .market-table { width: 100%; border-collapse: collapse; }
         .market-table thead th {
           text-align: left;
@@ -223,7 +230,7 @@ export default function TrendingMarket() {
           display: flex; align-items: center; justify-content: center;
           font-size: 13px; color: #fff;
         }
-        .symbol-cell { color: var(--accent); font-weight: 600; }
+        .symbol-cell { color: var(--accent-text); font-weight: 600; }
         .up { color: var(--green); font-weight: 600; }
         .down { color: var(--red); font-weight: 600; }
 
@@ -234,6 +241,6 @@ export default function TrendingMarket() {
           .market-table tbody td:nth-child(5) { display: none; }
         }
       `}</style>
-    </div>
+    </MarketCard>
   );
 }

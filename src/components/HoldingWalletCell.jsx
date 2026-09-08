@@ -35,7 +35,7 @@ export default function HoldingWalletCell({ symbol }) {
           font-family: inherit;
           font-size: 12.5px;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--accent-text);
           background: rgba(99, 102, 241, 0.15);
           border: 1px solid rgba(99, 102, 241, 0.35);
           border-radius: 10px;

@@ -81,9 +81,9 @@ export default function BankAccounts() {
           display: flex; align-items: center; justify-content: space-between; gap: 12px;
           margin-bottom: 6px;
         }
-        .label { color: var(--text-muted); font-size: 14px; }
+        .label { margin-bottom: 0; }
         .ba-add {
-          font-size: 13px; font-weight: 600; color: var(--accent);
+          font-size: 13px; font-weight: 600; color: var(--accent-text);
           border: 1px solid var(--glass-border); border-radius: 10px;
           padding: 7px 14px; white-space: nowrap;
           transition: border-color 0.15s, background 0.15s;

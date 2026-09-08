@@ -71,7 +71,7 @@ export default function EmptyState({ icon, title, hint, action, className = "" }
           font-family: inherit;
           font-size: 13px;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--accent-text);
           background: none;
           border: 1px solid var(--glass-border);
           border-radius: 12px;

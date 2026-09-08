@@ -1,49 +1,66 @@
 import walletIcon from "../assets/wallet.svg";
 import ethIcon from "../assets/eth-logo.svg";
 import Money from "./Money";
+import CardLoading from "./CardLoading";
+import EmptyState from "./EmptyState";
+import { emptyIcons } from "./emptyIcons";
 
-export default function WalletOrbit({ total }) {
+export default function WalletOrbit({ total, loading = false, empty = false }) {
   return (
     <div className="card wallet-card">
       <p className="label">My Wallet</p>
-<h2 className="wallet-total">
-  Total: <span><Money value={total} /></span>
-</h2>
 
-      <div className="orbit-wrap">
-        <div className="orbit-ring ring-1" />
-        <div className="orbit-ring ring-2" />
-        <div className="orbit-ring ring-3" />
+      {loading ? (
+        <CardLoading label="Loading your wallet total…" rows={4} />
+      ) : empty ? (
+        <EmptyState
+          icon={emptyIcons.coins}
+          title="No funds yet"
+          hint="Add money to your account and your balance and holdings appear here."
+          action={{ label: "Add funds", to: "/wallet" }}
+        />
+      ) : (
+        <>
+          <h2 className="wallet-total">
+            Total: <span><Money value={total} /></span>
+          </h2>
 
-        <div className="orbit-dot dot-top" />
-        <div className="orbit-dot dot-right" />
-        <div className="orbit-dot dot-left" />
-        <div className="orbit-dot dot-bottom" />
+          <div className="orbit-wrap">
+            <div className="orbit-ring ring-1" />
+            <div className="orbit-ring ring-2" />
+            <div className="orbit-ring ring-3" />
 
-<div className="orbit-spin spin-outer">
-  <div className="coin-bubble eth-bubble">
-    <img src={ethIcon} alt="ETH" />
-  </div>
-</div>
-<div className="orbit-spin spin-inner">
-  <div className="coin-bubble btc-bubble">₿</div>
-</div>
-<div className="coin-bubble center-bubble">
-  <img src={walletIcon} alt="Wallet" />
-</div>
-      </div>
+            <div className="orbit-dot dot-top" />
+            <div className="orbit-dot dot-right" />
+            <div className="orbit-dot dot-left" />
+            <div className="orbit-dot dot-bottom" />
+
+            <div className="orbit-spin spin-outer">
+              <div className="coin-bubble eth-bubble">
+                <img src={ethIcon} alt="ETH" />
+              </div>
+            </div>
+            <div className="orbit-spin spin-inner">
+              <div className="coin-bubble btc-bubble">₿</div>
+            </div>
+            <div className="coin-bubble center-bubble">
+              <img src={walletIcon} alt="Wallet" />
+            </div>
+          </div>
+        </>
+      )}
 
       <style>{`
         .wallet-card { position: relative; overflow: hidden; min-height: 300px;
           padding-bottom: 50px;
         }
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 6px; }
         .wallet-total { font-size: 26px; font-weight: 700; 
           padding-bottom: 16px;
         }
         .wallet-total span { color: var(--text); }
 
         .orbit-wrap {
+          --orbit: min(300px, 100%);
           position: relative;
           width: 100%;
           height: 220px;
@@ -56,9 +73,9 @@ export default function WalletOrbit({ total }) {
           top: 50%; left: 50%;
           transform: translate(-50%, -50%);
         }
-        .ring-1 { width: 300px; height: 300px; }
-        .ring-2 { width: 210px; height: 210px; }
-        .ring-3 { width: 120px; height: 120px; }
+        .ring-1 { width: var(--orbit); aspect-ratio: 1; }
+        .ring-2 { width: calc(var(--orbit) * 0.7); aspect-ratio: 1; }
+        .ring-3 { width: calc(var(--orbit) * 0.4); aspect-ratio: 1; }
 
         .orbit-dot {
           position: absolute;
@@ -67,8 +84,8 @@ export default function WalletOrbit({ total }) {
           background: var(--text-muted);
         }
         .dot-top { top: 8px; left: 50%; }
-        .dot-right { top: 50%; right: 40px; }
-        .dot-left { top: 60%; left: 90px; }
+        .dot-right { top: 50%; right: 13%; }
+        .dot-left { top: 60%; left: 30%; }
         .dot-bottom { bottom: 30px; left: 45%; }
 
         .coin-bubble {
@@ -84,15 +101,15 @@ export default function WalletOrbit({ total }) {
           width: 64px;
     height: 64px;
     
-    background: linear-gradient(135deg, var(--accent), #8b8bff);
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
     font-size: 22px;
         }
         .eth-bubble img { width: 40px; height: 40px; } 
         .btc-bubble {
           width: 48px; height: 48px;
           
-          background: linear-gradient(135deg, var(--accent), #3A4EFF);
-          font-size: 20px;
+          background: linear-gradient(135deg, var(--accent), var(--accent-light));
+          font-size: 22px;
         }
         .center-bubble {
           width: 40px; height: 40px;
@@ -109,16 +126,16 @@ export default function WalletOrbit({ total }) {
 }
 
 .spin-outer {
-  width: 300px;
-  height: 300px;
-  margin: -150px 0 0 -150px;
+  width: var(--orbit);
+  aspect-ratio: 1;
+  margin: calc(var(--orbit) / -2) 0 0 calc(var(--orbit) / -2);
   animation: spin 14s linear infinite;
 }
 
 .spin-inner {
-  width: 210px;
-  height: 210px;
-  margin: -105px 0 0 -105px;
+  width: calc(var(--orbit) * 0.7);
+  aspect-ratio: 1;
+  margin: calc(var(--orbit) * -0.35) 0 0 calc(var(--orbit) * -0.35);
   animation: spin 9s linear infinite reverse;
 }
 

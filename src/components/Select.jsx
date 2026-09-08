@@ -1,8 +1,13 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 /**
- * Polished, searchable replacement for a native <select>.
+ * Polished replacement for a native <select>.
  * options: [{ value, label, icon? }]
+ *
+ * searchable — set false for short, fixed lists (a handful of coins, say),
+ *   where a search field is more chrome than help. Keyboard handling then
+ *   lives on the trigger, which keeps focus while the list is open.
+ * ariaLabel  — accessible name when no visible <label> points at the trigger.
  */
 export default function Select({
   options,
@@ -11,6 +16,8 @@ export default function Select({
   placeholder = "Select...",
   searchPlaceholder = "Search...",
   emptyText = "No matches",
+  searchable = true,
+  ariaLabel,
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -37,10 +44,10 @@ export default function Select({
   }, []);
 
   useEffect(() => {
-    if (open) {
+    if (open && searchable) {
       requestAnimationFrame(() => searchRef.current?.focus());
     }
-  }, [open]);
+  }, [open, searchable]);
 
   function toggleOpen() {
     if (!open) {
@@ -79,8 +86,14 @@ export default function Select({
         type="button"
         className={"ui-select-trigger" + (open ? " open" : "")}
         onClick={toggleOpen}
+        onKeyDown={searchable ? undefined : handleKeyDown}
+        aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={!searchable && open ? listboxId : undefined}
+        aria-activedescendant={
+          !searchable && open && filtered[highlight] ? optionId(filtered[highlight]) : undefined
+        }
       >
         <span className="ui-select-value">
           {selected ? (
@@ -97,6 +110,7 @@ export default function Select({
 
       {open && (
         <div className="ui-select-panel">
+          {searchable && (
           <input
             ref={searchRef}
             type="text"
@@ -114,6 +128,7 @@ export default function Select({
             }}
             onKeyDown={handleKeyDown}
           />
+          )}
           <div className="ui-select-list" role="listbox" id={listboxId}>
             {filtered.length === 0 && (
               <div className="ui-select-empty">{emptyText}</div>
@@ -241,14 +256,14 @@ export default function Select({
           color: var(--text);
         }
         .ui-select-option.highlighted { background: var(--fill-hover); }
-        .ui-select-option.selected { color: var(--accent); font-weight: 600; }
+        .ui-select-option.selected { color: var(--accent-text); font-weight: 600; }
         .ui-select-option-label {
           flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-        .ui-select-check { color: var(--accent); font-size: 11.5px; }
+        .ui-select-check { color: var(--accent-text); font-size: 11.5px; }
         .ui-select-icon { font-size: 15px; line-height: 1; flex-shrink: 0; }
       `}</style>
     </div>

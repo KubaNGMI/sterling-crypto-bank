@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useCryptoPrices } from "../hooks/useCryptoPrices";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabaseClient";
@@ -6,56 +6,38 @@ import { COINS, coinPrice, isImageIcon } from "../coins";
 import { formatUsd } from "../utils/format";
 import { withMinDuration } from "../utils/withMinDuration";
 import { scheduleUserNotification } from "../utils/notify";
+import Select from "./Select";
 import VerifyGate from "./VerifyGate";
 import ConfirmPanel from "./ConfirmPanel";
 
-function CoinSelect({ value, onChange, options }) {
-  const [open, setOpen] = useState(false);
-  const selected = COINS[value];
-
+// The coin picker is the shared Select in its compact, search-free variant —
+// same keyboard handling, ARIA, and outside-click close as every other select
+// in the app, rather than a second implementation of the same control.
+function CoinSelect({ value, onChange, options, ariaLabel }) {
   return (
-    <div className="coin-select-wrap">
-      <button
-        type="button"
-        className="coin-select-btn"
-        onClick={() => setOpen((v) => !v)}
-      >
-        {isImageIcon(selected.icon) ? (
-          <img src={selected.icon} alt={selected.symbol} className="coin-select-icon" />
-        ) : (
-          <span className="coin-select-icon-text">{selected.icon}</span>
-        )}
-        {selected.symbol} <span className="chev">▾</span>
-      </button>
-
-      {open && (
-        <div className="coin-select-menu">
-          {options.map((sym) => (
-            <button
-              type="button"
-              key={sym}
-              className="coin-select-option"
-              onClick={() => {
-                onChange(sym);
-                setOpen(false);
-              }}
-            >
-              {isImageIcon(COINS[sym].icon) ? (
-                <img src={COINS[sym].icon} alt={sym} className="coin-select-icon" />
-              ) : (
-                <span className="coin-select-icon-text">{COINS[sym].icon}</span>
-              )}
-              {sym}
-            </button>
-          ))}
-        </div>
-      )}
+    <div className="coin-select-field">
+      <Select
+        searchable={false}
+        ariaLabel={ariaLabel}
+        value={value}
+        onChange={onChange}
+        options={options.map((sym) => ({
+          value: sym,
+          label: sym,
+          icon: isImageIcon(COINS[sym].icon) ? (
+            <img src={COINS[sym].icon} alt="" className="coin-select-icon" />
+          ) : (
+            <span className="coin-select-icon-text">{COINS[sym].icon}</span>
+          ),
+        }))}
+      />
     </div>
   );
 }
 
 export default function TradePanel({ onTradeComplete, balance = 0, holdings = [] }) {
   const { user } = useAuth();
+  const fieldId = useId();
   const [mode, setMode] = useState("buy");
   const [fromSymbol, setFromSymbol] = useState("USD");
   const [toSymbol, setToSymbol] = useState("BTC");
@@ -204,15 +186,20 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
       </div>
 
       <div className="input-group">
-        <label>From</label>
+        <label htmlFor={fieldId + "-from"}>From</label>
         <div className="coin-input">
           <CoinSelect
             value={fromSymbol}
             onChange={setFromSymbol}
             options={Object.keys(COINS).filter((s) => s !== toSymbol)}
+            ariaLabel="Currency to trade from"
           />
           <input
+            id={fieldId + "-from"}
             type="text"
+            inputMode="decimal"
+            autoComplete="off"
+            placeholder="0.00"
             value={fromAmount}
             onChange={(e) => setFromAmount(e.target.value)}
           />
@@ -224,10 +211,14 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
       </button>
 
       <div className="input-group">
-        <label>To</label>
+        <label htmlFor={fieldId + "-to"}>To</label>
         <div className="coin-input">
           <input
+            id={fieldId + "-to"}
             type="text"
+            inputMode="decimal"
+            readOnly
+            aria-readonly="true"
             value={
               toAmount
                 ? toCoin.isCash
@@ -235,32 +226,37 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
                   : toAmount.toFixed(6)
                 : "0.00"
             }
-            readOnly
           />
           <CoinSelect
             value={toSymbol}
             onChange={setToSymbol}
             options={Object.keys(COINS).filter((s) => s !== fromSymbol)}
+            ariaLabel="Currency to trade into"
           />
         </div>
       </div>
 
       <p className="total-line">
-        Total :{" "}
+        Total{" "}
         <span>
           {loading
-            ? "loading..."
+            ? "Fetching live prices…"
             : error
-            ? "price unavailable"
+            ? "Price unavailable right now"
             : formatUsd(usdValue)}
         </span>
       </p>
 
-      {feedback && (
-        <p className={feedback.type === "success" ? "feedback-success" : "feedback-error"}>
-          {feedback.text}
-        </p>
-      )}
+      <div className="trade-feedback" aria-live="polite" aria-atomic="true">
+        {feedback && (
+          <p
+            role={feedback.type === "error" ? "alert" : undefined}
+            className={feedback.type === "success" ? "feedback-success" : "feedback-error"}
+          >
+            {feedback.text}
+          </p>
+        )}
+      </div>
 
       {confirming ? (
         <ConfirmPanel
@@ -319,6 +315,7 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
           position: relative;
           z-index: 1;
           flex: 1;
+          min-height: 44px;
           border: none;
           background: none;
           color: var(--text-muted);
@@ -358,6 +355,7 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
         }
 
         .swap-icon {
+          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -370,6 +368,15 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
           border-radius: 50%;
           cursor: pointer;
           transition: transform 0.15s, background 0.15s;
+        }
+        .swap-icon::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 44px;
+          height: 44px;
         }
         .swap-icon:hover {
           background: var(--accent-deep);
@@ -386,24 +393,6 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
         }
         .total-line span { color: var(--text); font-weight: 600; }
 
-        .feedback-success {
-          margin-top: 12px;
-          font-size: 13px;
-          color: var(--green);
-          background: var(--wash-green);
-          border: 1px solid var(--wash-green-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
-        .feedback-error {
-          margin-top: 12px;
-          font-size: 13px;
-          color: var(--red);
-          background: var(--wash-red);
-          border: 1px solid var(--wash-red-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
 
         .buy-btn {
           width: 100%;
@@ -423,52 +412,33 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
           cursor: not-allowed;
         }
 
-        .coin-select-wrap { position: relative; flex-shrink: 0; }
-        .coin-select-btn {
-          display: flex;
-          align-items: center;
+        .coin-select-field { flex-shrink: 0; }
+        .coin-select-field .ui-select { width: auto; }
+        .coin-select-field .ui-select-trigger {
+          position: relative;
           gap: 6px;
-          background: none;
-          border: none;
-          color: var(--text);
-          font-size: 14px;
           font-weight: 600;
           white-space: nowrap;
         }
-        .coin-select-icon { width: 18px; height: 18px; border-radius: 50%; object-fit: contain; }
-        .coin-select-icon-text { font-size: 15px; }
-        .chev { color: var(--text-muted); font-size: 11px; }
-
-        .coin-select-menu {
+        .coin-select-field .ui-select-trigger::after {
+          content: "";
           position: absolute;
-          top: calc(100% + 6px);
+          top: 50%;
           left: 0;
+          transform: translateY(-50%);
+          width: 100%;
+          height: 44px;
+        }
+        .coin-select-field .ui-select-panel {
+          left: 0;
+          min-width: 130px;
           background: rgba(28, 28, 46, 0.85);
           backdrop-filter: blur(20px) saturate(180%);
           -webkit-backdrop-filter: blur(20px) saturate(180%);
-          border: 1px solid var(--glass-border);
-          border-radius: 12px;
-          padding: 6px;
-          min-width: 130px;
-          max-height: 220px;
-          overflow-y: auto;
-          z-index: 10;
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+          border-color: var(--glass-border);
         }
-        .coin-select-option {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          width: 100%;
-          background: none;
-          border: none;
-          color: var(--text);
-          font-size: 14px;
-          padding: 8px 10px;
-          border-radius: 8px;
-          text-align: left;
-        }
-        .coin-select-option:hover { background: var(--fill-hover); }
+        .coin-select-icon { width: 18px; height: 18px; border-radius: 50%; object-fit: contain; }
+        .coin-select-icon-text { font-size: 15px; }
       `}</style>
     </div>
     </VerifyGate>

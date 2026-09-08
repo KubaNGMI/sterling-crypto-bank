@@ -275,7 +275,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Phone numbe
           color: var(--text);
         }
         .phone-option:hover, .phone-option.highlighted { background: var(--fill-hover); }
-        .phone-option.selected { color: var(--accent); font-weight: 600; }
+        .phone-option.selected { color: var(--accent-text); font-weight: 600; }
         .phone-option-name {
           flex: 1;
           overflow: hidden;
@@ -283,7 +283,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Phone numbe
           white-space: nowrap;
         }
         .phone-option-dial { color: var(--text-muted); font-size: 12.5px; }
-        .phone-option.selected .phone-option-dial { color: var(--accent); }
+        .phone-option.selected .phone-option-dial { color: var(--accent-text); }
 
         .phone-empty {
           padding: 16px 12px;

@@ -182,7 +182,7 @@ export default function NotificationBell() {
           font-family: inherit;
           font-size: 12.5px;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--accent-text);
           background: none;
           border: none;
         }

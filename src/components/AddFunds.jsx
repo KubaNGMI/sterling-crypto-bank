@@ -169,24 +169,6 @@ export default function AddFunds({ onComplete }) {
         .add-funds-btn:hover { background: var(--accent-deep); }
         .add-funds-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .feedback-success {
-          margin-top: 12px;
-          font-size: 13px;
-          color: var(--green);
-          background: var(--wash-green);
-          border: 1px solid var(--wash-green-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
-        .feedback-error {
-          margin-top: 12px;
-          font-size: 13px;
-          color: var(--red);
-          background: var(--wash-red);
-          border: 1px solid var(--wash-red-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
       `}</style>
     </div>
     </VerifyGate>

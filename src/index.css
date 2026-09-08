@@ -8,6 +8,12 @@
   --text-muted: #8b8b9e;
   --accent: #6366f1;
   --accent-deep: #4f46e5;
+  /* Indigo Light — the highlight end of the avatar and orbit-bubble gradients. */
+  --accent-light: #8b8bff;
+  /* Signal Indigo measures ~4.0:1 on this field: fine as a fill, below WCAG AA
+     as text. Accent-colored text under 24px uses this lighter step (~6.1:1)
+     instead; --accent stays the fill, border, and focus color. */
+  --accent-text: var(--accent-light);
   --green: #22c55e;
   --red: #ef4444;
   --orange: #f7931a;
@@ -48,10 +54,13 @@ html {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  /* Animations stop: entrances, shimmer, the orbit. Transitions deliberately
+     do not — a focus border, a hover, or the Buy/Sell pill snapping with zero
+     duration reads as a glitch rather than as calm, and none of them travel
+     far enough to be a vestibular trigger. */
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
   }
 }
 
@@ -199,7 +208,7 @@ ul { list-style: none; }
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), #8b8bff);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,6 +231,78 @@ ul { list-style: none; }
   display: grid;
   grid-template-columns: 1.6fr 1fr;
   gap: 24px;
+}
+
+/* ---------- Shared primitives ----------
+   These classes were each redefined inside a dozen component <style> blocks,
+   which are global, not scoped — whichever component mounted last won the
+   cascade. They live here once; components override only the delta they
+   actually need (usually margin). */
+
+/* The supporting caption above a figure, field, or chart. */
+.label {
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+/* Inline result of an action the user just took. */
+.feedback-success,
+.feedback-error {
+  margin-top: 12px;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  overflow-wrap: break-word;
+}
+.feedback-success {
+  color: var(--green);
+  background: var(--wash-green);
+  border: 1px solid var(--wash-green-line);
+}
+.feedback-error {
+  color: var(--red);
+  background: var(--wash-red);
+  border: 1px solid var(--wash-red-line);
+}
+
+/* Page-level variant: full width above the content it concerns, with room for
+   a recovery action beside the message. */
+.feedback-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+.feedback-banner__text {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.feedback-banner__action {
+  flex-shrink: 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: inherit;
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  padding: 7px 14px;
+  transition: background 0.15s;
+}
+.feedback-error .feedback-banner__action:hover {
+  background: var(--wash-red-strong);
+}
+.feedback-success .feedback-banner__action:hover {
+  background: var(--wash-green-strong);
 }
 
 /* ---------- Liquid glass card ---------- */

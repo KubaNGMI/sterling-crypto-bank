@@ -801,7 +801,7 @@ export default function CreateAccount() {
           font-size: 13px;
           color: var(--text-muted);
         }
-        .signup-line a { color: var(--accent); font-weight: 600; }
+        .signup-line a { color: var(--accent-text); font-weight: 600; }
         .signup-line a:hover { text-decoration: underline; }
       `}</style>
     </div>

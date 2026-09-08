@@ -41,7 +41,6 @@ export default function EuAccountDetails() {
 
       <style>{`
         .eu-account-card { margin-bottom: 24px; }
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 6px; }
         .eu-sub {
           font-size: 12.5px;
           color: var(--text-muted);

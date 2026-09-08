@@ -85,7 +85,7 @@ export default function Settings() {
 
       <style>{`
         .settings-page { max-width: 560px; }
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+        .label { margin-bottom: 12px; }
 
         .settings-section + .settings-section { margin-top: 0; }
         .settings-divider {
@@ -139,24 +139,6 @@ export default function Settings() {
           color: var(--text-muted);
         }
 
-        .feedback-success {
-          margin-top: 12px;
-          font-size: 13px;
-          color: var(--green);
-          background: var(--wash-green);
-          border: 1px solid var(--wash-green-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
-        .feedback-error {
-          margin-top: 12px;
-          font-size: 13px;
-          color: var(--red);
-          background: var(--wash-red);
-          border: 1px solid var(--wash-red-line);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
 
         @media (max-width: 560px) {
           .settings-form { flex-direction: column; }

@@ -71,11 +71,6 @@ export default function BalanceDonut({ cash, holdings, pending, total }) {
 
       <style>{`
         .balance-donut-card { margin-bottom: 24px; }
-        .balance-donut-card .label {
-          color: var(--text-muted);
-          font-size: 14px;
-          margin-bottom: 6px;
-        }
         .bd-total {
           font-size: 26px;
           font-weight: 700;

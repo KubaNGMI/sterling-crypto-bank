@@ -188,7 +188,14 @@ scoped set of financial semantics.
 - **Indigo Deep** (`#4f46e5`): the hover state for every solid indigo fill
   (buttons, the swap control).
 - **Indigo Light** (`#8b8bff`): highlight end of the avatar and orbit-bubble
-  gradients only.
+  gradients, and — as `--accent-text` — every accent-colored **text** under
+  24px.
+
+**The Accent Text Rule.** Signal Indigo measures ~4.0:1 on this field: correct
+as a fill, border, or focus color, below WCAG AA as text. Text that reads as
+accent-colored uses `--accent-text` (Indigo Light, ~6.1:1). Icons and chevrons
+keep `--accent` — non-text contrast only needs 3:1 — as does the topbar's 26px
+accent word, which clears the large-text threshold.
 
 ### Neutral
 - **Void** (`#0c0c14`): app background, behind everything.
@@ -392,8 +399,13 @@ Borderless inline trigger text with a `⌄` chevron that rotates 180° and turns
 accent on open. Panel: `--card-bg-alt`, 12px radius, `0 16px 40px rgba(0,0,0,0.45)`
 shadow, `ui-select-pop` 0.14s entrance. A bottom-bordered search input; option
 rows at 8px radius — highlighted = 6% white wash, selected = accent text + `✓`.
-Custom 8px scrollbar with an accent thumb on hover. The `CoinSelect` variant in
-TradePanel is the same pattern with a glass (`rgba(28,28,46,0.85)` + blur) menu.
+Custom 8px scrollbar with an accent thumb on hover.
+
+Two variants: the default searchable one, and `searchable={false}` for short
+fixed lists, which drops the search field and moves keyboard handling to the
+trigger. TradePanel's `CoinSelect` is the compact variant with a glass
+(`rgba(28,28,46,0.85)` + blur) menu — a wrapper around this component, not a
+second implementation of it.
 
 ### Tables (`.market-table`, `.history-table`)
 Borderless, rules only. Header cells: 12.5px Muted Lilac, weight 500, left
@@ -449,6 +461,16 @@ with a `counter-spin` keeping the coin bubbles upright). Coin bubbles are
 indigo-gradient circles (ETH 64px, BTC 48px) around a central wallet-icon bubble.
 The rotation is guarded by `prefers-reduced-motion` (it stops, it doesn't
 restyle).
+
+### Shared primitives (`index.css`)
+
+`.label`, `.feedback-success`, and `.feedback-error` are declared once in
+`index.css`. Component `<style>` blocks are global, not scoped, so a class
+defined in several of them resolves by mount order; these three had drifted
+across fourteen and four definitions respectively. Components override only
+their own delta — usually `margin`. `.feedback-banner` is the page-level
+variant, laying the message beside a recovery action above the content it
+concerns.
 
 ### Empty state (`EmptyState.jsx`)
 The one pattern for a card with no data yet. Centered column: a 44px rounded

@@ -83,7 +83,6 @@ export default function PortfolioDonut({ holdings, prices, loading }) {
       )}
 
       <style>{`
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 6px; }
         .donut-card { min-height: 320px; }
         .donut-empty { color: var(--text-muted); font-size: 13px; margin-top: 16px; }
         .donut-chart-area { margin-top: 8px; }

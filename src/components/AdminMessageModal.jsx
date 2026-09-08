@@ -86,7 +86,7 @@ export default function AdminMessageModal({ notification, onClose }) {
             padding: 4px 10px 4px 8px;
             border-radius: 999px;
             background: rgba(99, 102, 241, 0.15);
-            color: var(--accent);
+            color: var(--accent-text);
           }
           .amm-badge svg { width: 13px; height: 13px; }
           .amm-close {

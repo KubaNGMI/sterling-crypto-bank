@@ -107,7 +107,7 @@ export default function TransactionHistory({ transactions, loading, onSelectTran
           padding: 4px 10px;
           border-radius: 20px;
         }
-        .type-buy { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
+        .type-buy { background: rgba(99, 102, 241, 0.15); color: var(--accent-text); }
         .type-sell { background: var(--wash-red-strong); color: var(--red); }
         .type-deposit { background: var(--wash-green-strong); color: var(--green); }
         .type-withdrawal { background: var(--wash-amber-strong); color: var(--orange); }

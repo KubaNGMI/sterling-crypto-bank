@@ -186,7 +186,7 @@ export default function Login() {
           margin-top: 12px;
           font-size: 13px;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--accent-text);
         }
         .forgot-link:hover { text-decoration: underline; }
 
@@ -225,7 +225,7 @@ export default function Login() {
           color: var(--text-muted);
         }
         .signup-line a {
-          color: var(--accent);
+          color: var(--accent-text);
           font-weight: 600;
         }
         .signup-line a:hover { text-decoration: underline; }

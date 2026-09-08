@@ -59,7 +59,6 @@ export default function CashFlowChart({ data, loading }) {
       )}
 
       <style>{`
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 6px; }
         .cashflow-card { min-height: 320px; }
         .cashflow-empty { color: var(--text-muted); font-size: 13px; margin-top: 16px; }
         .chart-area { margin-top: 16px; }

@@ -7,6 +7,9 @@ import {
   YAxis,
 } from "recharts";
 import Money from "./Money";
+import CardLoading from "./CardLoading";
+import EmptyState from "./EmptyState";
+import { emptyIcons } from "./emptyIcons";
 import { formatUsd } from "../utils/format";
 
 function CustomTooltip({ active, payload, label }) {
@@ -22,51 +25,63 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-export default function SpendingChart({ total, change, data }) {
+export default function SpendingChart({ total, data, loading = false, empty = false }) {
   return (
     <div className="card spending-card">
-      <div className="spending-header">
-        <div>
+      {loading ? (
+        <>
           <p className="label">Spending</p>
-          <h2 className="spending-total">
-            <Money value={total} />
-          </h2>
-          {change != null && (
-            <span className="change-badge">
-              {change >= 0 ? "↑" : "↓"} {Math.abs(change)}%
-            </span>
-          )}
-        </div>
-      </div>
+          <CardLoading label="Loading your spending…" rows={4} />
+        </>
+      ) : empty ? (
+        <>
+          <p className="label">Spending</p>
+          <EmptyState
+            icon={emptyIcons.bars}
+            title="No spending yet"
+            hint="Your daily spending charts here once you start trading."
+          />
+        </>
+      ) : (
+        <>
+          <div className="spending-header">
+            <div>
+              <p className="label">Spending</p>
+              <h2 className="spending-total">
+                <Money value={total} />
+              </h2>
+            </div>
+          </div>
 
-      <div className="chart-area">
-        <ResponsiveContainer width="100%" height={180}>
-          <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="spendGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#22c55e" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="name" hide />
-            <YAxis hide />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#26263a", strokeWidth: 1 }} />
-            <Area
-              type="monotone"
-              dataKey="value"
-              stroke="#22c55e"
-              strokeWidth={2}
-              fill="url(#spendGradient)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+          <div className="chart-area">
+            <ResponsiveContainer width="100%" height={180}>
+              <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="spendGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" hide />
+                <YAxis hide />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#26263a", strokeWidth: 1 }} />
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#22c55e"
+                  strokeWidth={2}
+                  fill="url(#spendGradient)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      )}
 
       <style>{`
         .spending-card { min-height: 300px; }
         .spending-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .spending-total { font-size: 26px; font-weight: 700; margin-top: 4px; }
-        .change-badge { color: var(--green); font-size: 13px; font-weight: 600; }
         .chart-area { margin-top: 24px; }
 
         .chart-tooltip {

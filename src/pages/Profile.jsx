@@ -113,14 +113,11 @@ export default function Profile() {
           justify-content: space-between;
           margin-bottom: 16px;
         }
-        .account-card .label {
-          color: var(--text-muted);
-          font-size: 14px;
-        }
+        .account-card .label { margin-bottom: 0; }
         .account-edit {
           font-size: 13px;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--accent-text);
           border: 1px solid var(--glass-border);
           border-radius: 10px;
           padding: 6px 14px;

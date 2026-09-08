@@ -362,7 +362,7 @@ export default function AdminLedger({ users, usersLoading }) {
           gap: 24px;
           align-items: start;
         }
-        .label { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+        .label { margin-bottom: 16px; }
 
         .op-switch {
           display: flex;
