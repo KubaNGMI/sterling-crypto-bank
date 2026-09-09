@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import QRCode from "qrcode";
-import { DEPOSIT_ASSETS } from "../config/depositAddresses";
+import {
+  DEPOSIT_ASSETS,
+  normalizeTxHash,
+  txHashHint,
+  validateTxHash,
+} from "../config/depositAddresses";
 import { formatUsd } from "../utils/format";
 import AssetIcon from "./AssetIcon";
 import CopyButton from "./CopyButton";
@@ -11,7 +16,10 @@ import CopyButton from "./CopyButton";
 export default function DepositModal({ amount, submitting, onConfirm, onClose }) {
   const [asset, setAsset] = useState(null);
   const [qr, setQr] = useState(null);
+  const [txHash, setTxHash] = useState("");
+  const [touched, setTouched] = useState(false);
   const closeRef = useRef(null);
+  const fieldId = useId();
 
   useEffect(() => {
     function onKey(e) {
@@ -50,6 +58,17 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
   }, [asset]);
 
   const qrUrl = asset && qr?.address === asset.address ? qr.url : null;
+  const hashError = asset ? validateTxHash(asset, txHash) : null;
+  // Shown once the field has been blurred or submit has been pressed — not
+  // while they are still mid-hash. The submit button stays enabled either way,
+  // so pressing it is always what explains the problem.
+  const showHashError = touched && hashError;
+
+  function pickAsset(next) {
+    setAsset(next);
+    setTxHash("");
+    setTouched(false);
+  }
 
   // Portalled to <body>: every .card sets transform: translateZ(0) for
   // backdrop-blur compositing, which makes it the containing block for
@@ -85,7 +104,7 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
             <ul className="dep-list">
               {DEPOSIT_ASSETS.map((a) => (
                 <li key={a.symbol + a.network}>
-                  <button type="button" className="dep-option" onClick={() => setAsset(a)}>
+                  <button type="button" className="dep-option" onClick={() => pickAsset(a)}>
                     <AssetIcon asset={a} size={30} />
                     <span className="dep-option-text">
                       <span className="dep-option-name">
@@ -111,7 +130,7 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
           </>
         ) : (
           <>
-            <button type="button" className="dep-back" onClick={() => setAsset(null)}>
+            <button type="button" className="dep-back" onClick={() => pickAsset(null)}>
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" aria-hidden="true">
                 <path d="M10 3L5 8l5 5" />
               </svg>
@@ -154,16 +173,45 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
               network. Anything sent on another network is lost and cannot be recovered.
             </p>
 
+            <label className="label dep-hash-label" htmlFor={fieldId + "-hash"}>
+              Transaction hash
+            </label>
+            <input
+              id={fieldId + "-hash"}
+              type="text"
+              className={"dep-hash-input" + (showHashError ? " invalid" : "")}
+              value={txHash}
+              onChange={(e) => setTxHash(e.target.value)}
+              onBlur={() => setTouched(true)}
+              placeholder={asset.hashKind === "evm" ? "0x…" : "Paste the hash"}
+              autoComplete="off"
+              spellCheck="false"
+              aria-invalid={showHashError ? true : undefined}
+              aria-describedby={fieldId + (showHashError ? "-err" : "-hint")}
+            />
+            {showHashError ? (
+              <p className="dep-hash-msg dep-hash-msg--error" id={fieldId + "-err"} role="alert">
+                {hashError}
+              </p>
+            ) : (
+              <p className="dep-hash-msg" id={fieldId + "-hint"}>
+                {txHashHint(asset)} An explorer link works too.
+              </p>
+            )}
+
             <button
               type="button"
               className="dep-submit"
-              onClick={() => onConfirm(asset)}
+              onClick={() => {
+                setTouched(true);
+                if (!hashError) onConfirm(asset, normalizeTxHash(txHash));
+              }}
               disabled={submitting}
             >
               {submitting ? "Submitting…" : "I have sent it"}
             </button>
             <p className="dep-foot">
-              Your balance updates once we confirm the transfer on-chain.
+              We check the transaction on-chain before your balance updates.
             </p>
           </>
         )}
@@ -310,6 +358,31 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
             border-radius: 8px;
           }
           .dep-warning strong { font-weight: 700; }
+
+          .dep-hash-label { display: block; margin-top: 16px; margin-bottom: 6px; }
+          .dep-hash-input {
+            width: 100%;
+            min-height: 44px;
+            padding: 12px 14px;
+            background: var(--fill);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12.5px;
+            outline: none;
+            transition: border-color 0.15s, background 0.15s;
+          }
+          .dep-hash-input::placeholder { color: var(--text-muted); }
+          .dep-hash-input:focus { border-color: var(--accent); background: var(--fill-hover); }
+          .dep-hash-input.invalid { border-color: var(--red); }
+          .dep-hash-msg {
+            margin-top: 6px;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--text-muted);
+          }
+          .dep-hash-msg--error { color: var(--red); }
 
           .dep-submit {
             width: 100%;

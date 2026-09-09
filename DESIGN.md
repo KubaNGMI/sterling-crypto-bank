@@ -25,6 +25,9 @@ colors:
   coin-luna: "#ffd83d"
   coin-bnb: "#f0b90b"
   coin-ada: "#0033ad"
+  coin-sol: "#14f195"
+  coin-usdt: "#26a17b"
+  coin-trx: "#eb0029"
   chart-amber: "#eab308"
 typography:
   display:
@@ -221,10 +224,16 @@ accent word, which clears the large-text threshold.
 
 ### Token identity colors
 Each coin carries its own brand color, used **only** for its dot / logo chip in
-market tables and the portfolio donut — never for interface elements. ETH
-`#627eea`, LUNA `#ffd83d`, BNB `#f0b90b`, ADA `#0033ad`, BTC reuses Bitcoin Amber.
-The donut's categorical fallback palette adds `#eab308`. These are outside the
-interface palette by design; do not pull them into UI.
+market tables, the portfolio donut, and the deposit picker — never for interface
+elements. ETH `#627eea`, LUNA `#ffd83d`, BNB `#f0b90b`, ADA `#0033ad`, SOL
+`#14f195`, USDT `#26a17b`, TRX `#eb0029`, BTC reuses Bitcoin Amber. The donut's
+categorical fallback palette adds `#eab308`. These are outside the interface
+palette by design; do not pull them into UI.
+
+Deposit-only assets (SOL, USDT, TRX) have no logo SVG yet, so `AssetIcon` draws
+a lettered chip on the token's color instead. A drawn initial is honest about
+being a placeholder; a Unicode glyph posing as a logo is not. Drop a real SVG
+into `src/assets/` and set `icon:` in `depositAddresses.js` to replace one.
 
 ### Named Rules
 **The One Hue Rule.** Signal Indigo is the only decorative color on any view.

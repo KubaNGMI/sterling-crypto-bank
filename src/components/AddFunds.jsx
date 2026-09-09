@@ -39,7 +39,12 @@ export default function AddFunds({ onComplete, transactions = [] }) {
   // The row lands as `pending`: the user has told us a transfer is on its way,
   // and nothing is spendable until an admin confirms it arrived on-chain from
   // Admin → Ledger. This is what stops Add Funds from minting cash.
-  async function handleConfirm(asset) {
+  //
+  // The hash rides along in `note` — every deposit address is shared across
+  // all users, so an incoming transfer cannot be attributed to a request by
+  // address alone. The hash is what makes Confirm a lookup instead of a guess.
+  // It is user-supplied and unverified: check it on-chain before confirming.
+  async function handleConfirm(asset, txHash) {
     setSubmitting(true);
     try {
       const { data, error } = await withMinDuration(() =>
@@ -52,7 +57,7 @@ export default function AddFunds({ onComplete, transactions = [] }) {
             coin_amount: null,
             usd_amount: value,
             status: "pending",
-            note: `Incoming ${asset.symbol} on ${asset.network}`,
+            note: `Incoming ${asset.symbol} on ${asset.network} · tx ${txHash}`,
           })
           .select("id")
           .single()
