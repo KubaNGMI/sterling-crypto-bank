@@ -13,6 +13,7 @@
     "@number-flow/react": "^0.6.2",
     "@supabase/supabase-js": "^2.112.3",
     "country-flag-icons": "^1.6.20",
+    "qrcode": "^1.5.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-is": "^19.2.8",

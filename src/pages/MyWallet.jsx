@@ -85,7 +85,7 @@ export default function MyWallet() {
       <PendingTransactions transactions={transactions} />
 
       <div className="wallet-mid-row">
-        <AddFunds onComplete={refetch} />
+        <AddFunds onComplete={refetch} transactions={transactions} />
       </div>
 
       <div className="wallet-mid-row">
