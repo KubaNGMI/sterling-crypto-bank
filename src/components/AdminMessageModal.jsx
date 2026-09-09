@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function AdminMessageModal({ notification, onClose }) {
   useEffect(() => {
@@ -14,7 +15,12 @@ export default function AdminMessageModal({ notification, onClose }) {
     dateStyle: "long",
   });
 
-  return (
+  // Portalled to <body>: every .card sets transform: translateZ(0) for
+  // backdrop-blur compositing, which makes it the containing block for
+  // position: fixed, and overflow: hidden, which clips anything escaping it.
+  // This modal renders outside a card today, but the portal means it keeps
+  // working if it is ever moved inside one.
+  return createPortal(
     <div className="amm-backdrop" onClick={onClose}>
       <div
         className="card amm-modal"
@@ -136,6 +142,7 @@ export default function AdminMessageModal({ notification, onClose }) {
           .amm-ack:hover { background: var(--accent-deep); }
         `}</style>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

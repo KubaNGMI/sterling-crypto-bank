@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { formatUsd } from "../utils/format";
 
 export default function TransactionDetailModal({ transaction, onClose }) {
@@ -16,7 +17,12 @@ export default function TransactionDetailModal({ transaction, onClose }) {
   const isCoin = t.coin_symbol && !Number.isNaN(coinAmount) && coinAmount !== 0;
   const pending = t.status === "pending";
 
-  return (
+  // Portalled to <body>: every .card sets transform: translateZ(0) for
+  // backdrop-blur compositing, which makes it the containing block for
+  // position: fixed, and overflow: hidden, which clips anything escaping it.
+  // This modal renders outside a card today, but the portal means it keeps
+  // working if it is ever moved inside one.
+  return createPortal(
     <div className="txd-backdrop" onClick={onClose}>
       <div
         className="card txd-modal"
@@ -186,6 +192,7 @@ export default function TransactionDetailModal({ transaction, onClose }) {
           }
         `}</style>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
