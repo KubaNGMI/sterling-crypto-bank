@@ -334,6 +334,10 @@ export default function TradePanel({ onTradeComplete, balance = 0, holdings = []
           display: flex;
           align-items: center;
           justify-content: space-between;
+          /* The From row puts the coin select immediately before the amount
+             input. Without a gap the select's chevron and the amount collide
+             and the chevron reads as part of the number. */
+          gap: 12px;
           background: var(--fill);
           border: 1px solid var(--glass-border);
           border-radius: 12px;
