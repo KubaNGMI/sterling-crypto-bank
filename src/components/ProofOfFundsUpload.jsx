@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import LineIcon from "./LineIcon";
+import DemoNotice from "./DemoNotice";
 import { SOURCE_OF_FUNDS_OPTIONS } from "../data/sourceOfFunds";
 
 // Proof of funds used to be the last step of the signup wizard. It can't live
@@ -78,6 +79,8 @@ export default function ProofOfFundsUpload({ profile, onComplete }) {
     <div className="card pof-card">
       <p className="label">Proof of Funds</p>
 
+      <DemoNotice variant="proofOfFunds" className="pof-demo" />
+
       <p className="pof-intro">
         {selected.length > 0
           ? `You told us where your funds come from when you signed up. Upload something that evidences ${selected.length > 1 ? "those sources" : "that source"}.`
@@ -147,6 +150,7 @@ export default function ProofOfFundsUpload({ profile, onComplete }) {
 
       <style>{`
         .pof-card .label { margin-bottom: 12px; }
+        .pof-demo { margin-bottom: 14px; }
         .pof-intro {
           font-size: 13px;
           line-height: 1.55;

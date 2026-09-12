@@ -10,6 +10,7 @@ import {
 import { formatUsd } from "../utils/format";
 import AssetIcon from "./AssetIcon";
 import CopyButton from "./CopyButton";
+import DemoNotice from "./DemoNotice";
 
 // Step two of funding: pick the rail, then send to the address. The amount is
 // already decided and rides along at the top so the two halves stay connected.
@@ -95,6 +96,8 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
             </svg>
           </button>
         </header>
+
+        <DemoNotice variant="deposit" className="dep-demo" />
 
         {!asset ? (
           <>
@@ -238,6 +241,7 @@ export default function DepositModal({ amount, submitting, onConfirm, onClose })
             animation: pop-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
           }
 
+          .dep-demo { margin-bottom: 16px; }
           .dep-head {
             display: flex;
             align-items: flex-start;

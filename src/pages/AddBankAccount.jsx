@@ -12,6 +12,7 @@ import {
   maskAccountNumber,
   validateBankDetails,
 } from "../utils/bank";
+import DemoNotice from "../components/DemoNotice";
 
 const STEP_LABELS = ["Region", "Details", "Statement", "Review"];
 
@@ -102,6 +103,8 @@ export default function AddBankAccount() {
       </div>
 
       <div className="card bank-wizard">
+        <DemoNotice variant="bankDetails" className="bw-demo" />
+
         <div className="bw-steps">
           {STEP_LABELS.map((label, i) => (
             <div className="bw-step" key={label}>
@@ -280,6 +283,7 @@ export default function AddBankAccount() {
       <style>{`
         .bank-wizard { max-width: 560px; overflow: visible; }
 
+        .bw-demo { margin-bottom: 20px; }
         .bw-steps { display: flex; justify-content: space-between; margin-bottom: 24px; }
         .bw-step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
         .bw-dot {

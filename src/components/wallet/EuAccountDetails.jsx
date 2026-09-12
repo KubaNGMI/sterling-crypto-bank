@@ -1,6 +1,7 @@
 import { useBankAccounts } from "../../hooks/useBankAccounts";
 import { EU_ACCOUNT } from "../../config/euAccount";
 import CopyButton from "../CopyButton";
+import DemoNotice from "../DemoNotice";
 
 // Shown once the user has linked at least one bank account — the EUR
 // virtual-account details they can receive funds into. Self-gating: renders
@@ -25,6 +26,8 @@ export default function EuAccountDetails() {
         share them with anyone paying you.
       </p>
 
+      <DemoNotice variant="euAccount" className="eu-demo" />
+
       <dl className="eu-rows">
         {rows.map((r) => (
           <div className="eu-row" key={r.label}>
@@ -41,6 +44,7 @@ export default function EuAccountDetails() {
 
       <style>{`
         .eu-account-card { margin-bottom: 24px; }
+        .eu-demo { margin-bottom: 16px; }
         .eu-sub {
           font-size: 12.5px;
           color: var(--text-muted);

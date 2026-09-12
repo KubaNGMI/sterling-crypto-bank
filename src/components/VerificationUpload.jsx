@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
+import DemoNotice from "./DemoNotice";
 
 const FIELDS = [
   { key: "photo", label: "Profile Photo", hint: "A clear photo of your face" },
@@ -73,15 +74,7 @@ export default function VerificationUpload({ verification, onComplete }) {
     <div className="card verify-card">
       <p className="label">Identity Verification</p>
 
-      <div className="prototype-notice">
-        <strong>Prototype only.</strong> This stores files in a private
-        Supabase bucket for demo purposes — it has not been reviewed for
-        real compliance, security, or fraud-detection requirements. Do not
-        upload real government ID, selfies, or bank documents here. Before
-        this collects real user data, integrate a licensed identity
-        verification provider (e.g. Stripe Identity, Persona, Veriff)
-        instead of raw file storage.
-      </div>
+      <DemoNotice variant="identity" className="verify-demo" />
 
       {status && (
         <div className={"status-badge status-" + status}>
@@ -127,17 +120,7 @@ export default function VerificationUpload({ verification, onComplete }) {
       <style>{`
         .label { margin-bottom: 12px; }
 
-        .prototype-notice {
-          background: var(--wash-amber);
-          border: 1px solid var(--wash-amber-line);
-          border-radius: 12px;
-          padding: 12px 14px;
-          font-size: 12.5px;
-          line-height: 1.55;
-          color: var(--text-muted);
-          margin-bottom: 16px;
-        }
-        .prototype-notice strong { color: var(--orange); font-weight: 700; }
+        .verify-demo { margin-bottom: 16px; }
 
         .status-badge {
           display: inline-block;
