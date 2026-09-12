@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { COINS } from "../../coins";
 import { useAdminLedger } from "../../hooks/useAdminLedger";
 import { personLabel } from "../../utils/identity";
-import { formatUsd } from "../../utils/format";
+import { formatUsd, formatCoin } from "../../utils/format";
 import CardLoading from "../CardLoading";
 import EmptyState from "../EmptyState";
 import { emptyIcons } from "../emptyIcons";
@@ -300,7 +300,6 @@ export default function AdminLedger({ users, usersLoading }) {
                   <th>Account</th>
                   <th>Type</th>
                   <th>Amount</th>
-                  <th>Status</th>
                   <th>Note</th>
                   <th>Date</th>
                   <th aria-label="Actions" />
@@ -310,18 +309,23 @@ export default function AdminLedger({ users, usersLoading }) {
                 {transactions.map((t) => (
                   <tr key={t.id}>
                     <td className="strong">{personLabel(usersById[t.user_id])}</td>
+                    {/* Pending rides in the Type cell rather than a column of
+                        its own: a settled row left that column empty, and the
+                        header alone cost ~60px the table couldn't spare. */}
                     <td>
-                      <span className="type-tag" style={{ color: TYPE_TONE[t.type] || "var(--text-muted)" }}>
-                        {t.type.replace("_", " ")}
+                      <span className="type-cell">
+                        <span className="type-tag" style={{ color: TYPE_TONE[t.type] || "var(--text-muted)" }}>
+                          {t.type.replace("_", " ")}
+                        </span>
+                        {t.status === "pending" && (
+                          <span className="pending-badge">Pending</span>
+                        )}
                       </span>
                     </td>
                     <td className="muted">
                       {t.coin_symbol
-                        ? `${Number(t.coin_amount) >= 0 ? "+" : "−"}${Math.abs(Number(t.coin_amount))} ${t.coin_symbol}`
+                        ? `${Number(t.coin_amount) >= 0 ? "+" : "−"}${formatCoin(Math.abs(Number(t.coin_amount)))} ${t.coin_symbol}`
                         : `${Number(t.usd_amount) >= 0 ? "+" : "−"}${money(t.usd_amount)}`}
-                    </td>
-                    <td className="muted">
-                      {t.status === "pending" && <span className="pending-badge">Pending</span>}
                     </td>
                     <td className="muted note-cell">{t.note || "—"}</td>
                     <td className="muted">
@@ -362,6 +366,10 @@ export default function AdminLedger({ users, usersLoading }) {
           gap: 24px;
           align-items: start;
         }
+        /* A grid item defaults to min-width:auto, so the nowrap table below
+           stretches this column past the card instead of scrolling inside it
+           — which pushed the row actions off the right edge. */
+        .ledger__activity-card { min-width: 0; }
         .label { margin-bottom: 16px; }
 
         .op-switch {
@@ -475,24 +483,32 @@ export default function AdminLedger({ users, usersLoading }) {
           font-size: 12.5px;
           color: var(--text-muted);
           font-weight: 500;
-          padding: 0 14px 12px 0;
+          padding: 0 10px 12px 0;
           border-bottom: 1px solid var(--border);
           white-space: nowrap;
         }
         .admin-table tbody td {
-          padding: 13px 14px 13px 0;
+          padding: 13px 10px 13px 0;
           font-size: 14px;
           border-bottom: 1px solid var(--glass-border);
           white-space: nowrap;
         }
         .admin-table tbody tr:last-child td { border-bottom: none; }
-        .admin-table .strong { font-weight: 600; }
         .admin-table .muted { color: var(--text-muted); }
-        .note-cell {
-          max-width: 180px;
+        /* Account falls back to the email when there's no name, and a long
+           address would otherwise widen the whole table. */
+        .admin-table .strong {
+          font-weight: 600;
+          max-width: 170px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
+        .note-cell {
+          max-width: 170px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .type-cell { display: inline-flex; align-items: center; gap: 8px; }
         .type-tag { font-weight: 600; text-transform: capitalize; }
         .pending-badge {
           display: inline-block;
@@ -520,7 +536,10 @@ export default function AdminLedger({ users, usersLoading }) {
         .ghost-btn:hover { color: var(--text); border-color: var(--accent); }
         .ghost-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        @media (max-width: 1000px) {
+        /* Side by side, the activity table only fits above ~1500px. Below
+           that the form stacks above it and the table gets the full width,
+           which carries it down to ~1100 before it has to scroll. */
+        @media (max-width: 1500px) {
           .ledger { grid-template-columns: 1fr; }
         }
       `}</style>
