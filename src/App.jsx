@@ -16,6 +16,7 @@ import RouteLoading from "./components/RouteLoading";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Login = lazy(() => import("./pages/Login"));
 const CreateAccount = lazy(() => import("./pages/CreateAccount"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const MyWallet = lazy(() => import("./pages/MyWallet"));
 const AddBankAccount = lazy(() => import("./pages/AddBankAccount"));
 const Analyze = lazy(() => import("./pages/Analyze"));
@@ -92,6 +93,9 @@ export default function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<CreateAccount />} />
+              {/* Public, and it must stay public: the recovery link lands here
+                  before the session exists. */}
+              <Route path="/reset-password" element={<ResetPassword />} />
 
               <Route element={<ProtectedShell />}>
                 <Route path="/" element={<Dashboard />} />

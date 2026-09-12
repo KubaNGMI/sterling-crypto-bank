@@ -92,7 +92,7 @@ export default function Login() {
             </button>
           </div>
 
-          <a href="#" className="forgot-link">Forgot Password</a>
+          <Link to="/reset-password" className="forgot-link">Forgot Password</Link>
 
           {error && <p className="error-text">{error}</p>}
 
