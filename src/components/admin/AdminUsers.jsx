@@ -76,7 +76,7 @@ export default function AdminUsers({
               {users.map((u) => (
                 <tr key={u.id} onClick={() => setOpenUser(u)}>
                   <td className="strong">{displayName(u)}</td>
-                  <td className="muted">{u.email || "—"}</td>
+                  <td className="muted email-cell" title={u.email || ""}>{u.email || "—"}</td>
                   <td className="muted">{u.country_of_residence || u.citizenship || "—"}</td>
                   <td className="muted">{RANGE_LABELS[u.funds_range] || "—"}</td>
                   <td><StatusPill status={u.account_status} /></td>
@@ -151,8 +151,26 @@ export default function AdminUsers({
         .admin-table tbody tr { cursor: pointer; transition: background 0.15s; }
         .admin-table tbody tr:hover { background: var(--fill-subtle); }
         .admin-table tbody tr:last-child td { border-bottom: none; }
-        .admin-table .strong { font-weight: 600; }
+        /* One long address was widening the whole table to ~1000px, which the
+           wrapper then makes you swipe through on a phone. Capping the two
+           free-text columns keeps the table near the width its data actually
+           needs. Same treatment the ledger already gives its account column. */
+        .admin-table .strong {
+          font-weight: 600;
+          max-width: 160px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         .admin-table .muted { color: var(--text-muted); }
+        .admin-table td.email-cell {
+          /* 220px fits an ordinary address outright; only genuinely long ones
+             clip, and those keep the full value in a title tooltip. */
+          max-width: 220px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
 
         .row-actions {
           display: flex;
