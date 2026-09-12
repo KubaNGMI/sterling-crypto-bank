@@ -8,13 +8,43 @@ import PhoneInput from "../components/PhoneInput";
 import Flag from "../components/Flag";
 import { GENDER_OPTIONS } from "../utils/identity";
 
+// Drawn line icons on the app's 16px / currentColor grid, same convention as
+// the sidebar and the empty states. The wizard used emoji here, which render
+// differently on every platform and read as decoration rather than interface.
+function LineIcon({ children, className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
 const COUNTRY_OPTIONS = [
   ...COUNTRIES.map((c) => ({
     value: c.name,
     label: c.name,
     icon: <Flag iso2={c.iso2} className="ui-select-flag" />,
   })),
-  { value: "Other", label: "Other", icon: "🌐" },
+  {
+    value: "Other",
+    label: "Other",
+    icon: (
+      <LineIcon className="ui-select-globe">
+        <circle cx="8" cy="8" r="5.5" />
+        <path d="M2.5 8h11" />
+        <path d="M8 2.5c1.6 1.7 2.4 3.6 2.4 5.5S9.6 11.8 8 13.5C6.4 11.8 5.6 9.9 5.6 8S6.4 4.2 8 2.5Z" />
+      </LineIcon>
+    ),
+  },
 ];
 
 const SOURCE_OF_FUNDS_OPTIONS = [
@@ -22,28 +52,54 @@ const SOURCE_OF_FUNDS_OPTIONS = [
     key: "employment",
     label: "Employment / Freelance / Self-Employed",
     hint: "Salary, bonus, pension, or independent work",
-    icon: "💼",
+    icon: (
+      <LineIcon>
+        <rect x="2" y="5" width="12" height="8.5" rx="1.5" />
+        <path d="M6 5V3.8A1.3 1.3 0 0 1 7.3 2.5h1.4A1.3 1.3 0 0 1 10 3.8V5" />
+        <path d="M2 8.6h12" />
+      </LineIcon>
+    ),
     proofHint: "Recent payslip, employment letter, or tax return",
   },
   {
     key: "investments",
     label: "Investments / Financial Assets",
     hint: "Dividends, stock sales, or investment returns",
-    icon: "📈",
+    icon: (
+      <LineIcon>
+        <path d="M2.2 13h11.6" />
+        <path d="M3.6 10.4 6.6 7.4l2 2 4.2-4.7" />
+        <path d="M10.2 4.7h2.8v2.8" />
+      </LineIcon>
+    ),
     proofHint: "Brokerage statement or dividend confirmation",
   },
   {
     key: "real_estate",
     label: "Real Estate",
     hint: "Sale of property or land",
-    icon: "🏠",
+    icon: (
+      <LineIcon>
+        <path d="M2.5 7.2 8 3l5.5 4.2" />
+        <path d="M4 8.3v5.2h8V8.3" />
+        <path d="M6.8 13.5V10h2.4v3.5" />
+      </LineIcon>
+    ),
     proofHint: "Sale contract, deed, or settlement statement",
   },
   {
     key: "other",
     label: "Other Sources",
     hint: "Gifts, gaming/lottery wins, or legal settlements",
-    icon: "🎁",
+    icon: (
+      <LineIcon>
+        <rect x="2.5" y="6.6" width="11" height="6.9" rx="1" />
+        <path d="M2.5 9.7h11" />
+        <path d="M8 6.6v6.9" />
+        <circle cx="6.5" cy="5.1" r="1.4" />
+        <circle cx="9.5" cy="5.1" r="1.4" />
+      </LineIcon>
+    ),
     proofHint: "Gift letter, payout notice, or settlement letter",
   },
 ];
@@ -408,7 +464,12 @@ export default function CreateAccount() {
                 }}
                 hidden
               />
-              <span className="dropzone-icon">📄</span>
+              <span className="dropzone-icon">
+                <LineIcon>
+                  <path d="M9 2H4.5A1.5 1.5 0 0 0 3 3.5v9A1.5 1.5 0 0 0 4.5 14h7a1.5 1.5 0 0 0 1.5-1.5V6L9 2Z" />
+                  <path d="M9 2v4h4" />
+                </LineIcon>
+              </span>
               <span className="dropzone-text">Click to upload files</span>
               <span className="dropzone-hint">PDF or image, multiple files allowed</span>
             </label>
@@ -609,11 +670,14 @@ export default function CreateAccount() {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 18px;
           flex-shrink: 0;
-          transition: background 0.15s;
+          color: var(--accent-text);
+          transition: background 0.15s, color 0.15s;
         }
-        .sof-card.checked .sof-icon-wrap { background: var(--accent); }
+        .sof-icon-wrap svg { width: 20px; height: 20px; display: block; }
+        /* The chip flips to a solid accent fill when selected, so the icon
+           has to stay legible against both that and the faint tint. */
+        .sof-card.checked .sof-icon-wrap { background: var(--accent); color: #fff; }
         .sof-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
         .sof-label { display: block; font-size: 13px; font-weight: 600; }
         .sof-hint { display: block; font-size: 12.5px; color: var(--text-muted); }
@@ -698,7 +762,9 @@ export default function CreateAccount() {
           transition: border-color 0.15s, background 0.15s;
         }
         .dropzone:hover { border-color: var(--accent); background: rgba(99,102,241,0.06); }
-        .dropzone-icon { font-size: 26px; }
+        .dropzone-icon { display: flex; color: var(--text-muted); }
+        .dropzone-icon svg { width: 26px; height: 26px; display: block; }
+        .ui-select-globe { width: 15px; height: 15px; display: block; }
         .dropzone-text { font-size: 13px; font-weight: 600; color: var(--text); }
         .dropzone-hint { font-size: 11.5px; color: var(--text-muted); }
 

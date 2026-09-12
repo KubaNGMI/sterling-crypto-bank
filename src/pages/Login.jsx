@@ -44,7 +44,13 @@ export default function Login() {
         <form className="login-form" onSubmit={handleSubmit}>
           <label htmlFor="login-email">Username or Email</label>
           <div className="field">
-            <span className="field-icon">👤</span>
+            <span className="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" />
+                <path d="M8 8.66669C9.10457 8.66669 10 7.77126 10 6.66669C10 5.56212 9.10457 4.66669 8 4.66669C6.89543 4.66669 6 5.56212 6 6.66669C6 7.77126 6.89543 8.66669 8 8.66669Z" />
+                <path d="M4.112 12.566C4.27701 12.0168 4.61465 11.5355 5.07483 11.1933C5.53502 10.8512 6.09323 10.6665 6.66667 10.6667H9.33333C9.90751 10.6665 10.4664 10.8516 10.9269 11.1945C11.3874 11.5375 11.725 12.0199 11.8893 12.57" />
+              </svg>
+            </span>
             <input
               id="login-email"
               type="email"
@@ -57,7 +63,12 @@ export default function Login() {
 
           <label htmlFor="login-password">Password</label>
           <div className="field">
-            <span className="field-icon">🔒</span>
+            <span className="field-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="7" width="10" height="6.5" rx="1.5" />
+                <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" />
+              </svg>
+            </span>
             <input
               id="login-password"
               type={showPassword ? "text" : "password"}
@@ -70,9 +81,14 @@ export default function Login() {
               type="button"
               className="field-toggle"
               onClick={() => setShowPassword((v) => !v)}
-              aria-label="Toggle password visibility"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
             >
-              {showPassword ? "🙈" : "👁"}
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8s-2.4 4.5-6.5 4.5S1.5 8 1.5 8Z" />
+                <circle cx="8" cy="8" r="1.9" />
+                {showPassword && <path d="M2.5 2.5l11 11" />}
+              </svg>
             </button>
           </div>
 
@@ -163,7 +179,13 @@ export default function Login() {
           transition: border-color 0.15s;
         }
         .field:focus-within { border-color: var(--accent); }
-        .field-icon { font-size: 14px; opacity: 0.8; }
+        .field-icon {
+          display: flex;
+          align-items: center;
+          color: var(--text-muted);
+          flex-shrink: 0;
+        }
+        .field-icon svg { width: 16px; height: 16px; display: block; }
         .field input {
           flex: 1;
           background: none;
@@ -174,12 +196,17 @@ export default function Login() {
         }
         .field input::placeholder { color: var(--text-muted); }
         .field-toggle {
+          display: flex;
+          align-items: center;
           background: none;
           border: none;
-          font-size: 14px;
-          opacity: 0.8;
           padding: 0;
+          color: var(--text-muted);
+          flex-shrink: 0;
+          transition: color 0.15s;
         }
+        .field-toggle:hover { color: var(--text); }
+        .field-toggle svg { width: 16px; height: 16px; display: block; }
 
         .forgot-link {
           align-self: flex-end;
