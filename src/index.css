@@ -212,7 +212,13 @@ ul { list-style: none; }
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #fff;
   transition: transform 0.15s, box-shadow 0.15s;
+}
+.avatar svg {
+  width: 19px;
+  height: 19px;
+  display: block;
 }
 .avatar:hover {
   transform: translateY(-1px);

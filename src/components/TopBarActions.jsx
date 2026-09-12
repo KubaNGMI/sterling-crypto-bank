@@ -11,7 +11,12 @@ export default function TopBarActions() {
     <div className="topbar-actions-global">
       <NotificationBell />
       <Link to="/profile" className="avatar" aria-label="Go to your profile">
-        👤
+        {/* The sidebar's profile glyph without its enclosing ring — the avatar
+            is already a circle, so the ring would just double up. */}
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M8 8.66669C9.10457 8.66669 10 7.77126 10 6.66669C10 5.56212 9.10457 4.66669 8 4.66669C6.89543 4.66669 6 5.56212 6 6.66669C6 7.77126 6.89543 8.66669 8 8.66669Z" />
+          <path d="M4.112 12.566C4.27701 12.0168 4.61465 11.5355 5.07483 11.1933C5.53502 10.8512 6.09323 10.6665 6.66667 10.6667H9.33333C9.90751 10.6665 10.4664 10.8516 10.9269 11.1945C11.3874 11.5375 11.725 12.0199 11.8893 12.57" />
+        </svg>
       </Link>
 
       <style>{`

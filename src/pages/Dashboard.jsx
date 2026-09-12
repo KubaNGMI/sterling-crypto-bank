@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTransactions } from "../hooks/useTransactions";
 import { useCryptoPrices } from "../hooks/useCryptoPrices";
 import { useProfile } from "../hooks/useProfile";
-import { nameVariants } from "../utils/identity";
+import { greetingName } from "../utils/identity";
 import {
   calculateHoldings,
   calculatePortfolioValue,
@@ -90,10 +90,9 @@ export default function Dashboard() {
   const spendingSeries = useMemo(() => calculateSpendingSeries(transactions), [transactions]);
   const totalSpending = useMemo(() => calculateTotalSpending(transactions), [transactions]);
 
-  const names = nameVariants(profile, user?.user_metadata);
   const greeting = GREETINGS[tick % GREETINGS.length];
   const subtext = SUBTEXTS[tick % SUBTEXTS.length];
-  const displayName = names[tick % names.length];
+  const displayName = greetingName(profile, user?.user_metadata);
 
   // The ledger is what every figure on this page is derived from. Until it
   // lands, the cards show a skeleton rather than a confident $0.00 — a zero

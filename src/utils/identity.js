@@ -31,23 +31,15 @@ export function personLabel(user) {
   return fullName(user) || user.email || user.id?.slice(0, 8) || "Unknown";
 }
 
-// The greeting name in a couple of registers — full name, then just the
-// first name — so the dashboard can rotate to something more casual. No
-// honorifics, and deliberately no email: the local half of an address is a
-// login credential, not what someone is called, and greeting a customer of a
-// bank by it reads as the machine not knowing who they are.
+// The name the dashboard greets you by. First name only — a greeting is the
+// familiar register, and the full legal name belongs on documents, not on a
+// hello. Deliberately no email either: the local half of an address is a login
+// credential, not what someone is called, and a bank greeting a customer by it
+// reads as the machine not knowing who they are.
 //
-// `meta` is the auth user_metadata copy, which rides along with the session
-// and so is readable before the profiles row has been fetched. The profile
-// row wins wherever both have a value.
-export function nameVariants(profile, meta) {
-  const first = profile?.first_name || meta?.first_name || "";
-  const last = profile?.last_name || meta?.last_name || "";
-
-  const out = [];
-  if (first && last) out.push(`${first} ${last}`);
-  if (first) out.push(first);
-
-  const unique = [...new Set(out)];
-  return unique.length ? unique : ["there"];
+// `meta` is the auth user_metadata copy, which rides along with the session and
+// so is readable before the profiles row has been fetched. The profile row wins
+// wherever both have a value.
+export function greetingName(profile, meta) {
+  return profile?.first_name || meta?.first_name || "there";
 }
