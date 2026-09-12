@@ -61,6 +61,13 @@ create policy "profiles_update" on public.profiles
 -- Without this, "update your own profile" includes account_status — a user
 -- could sign up and verify themselves. Reverts rather than raises, because
 -- signup legitimately re-sends these columns with unchanged values.
+--
+-- `role` is frozen too, though nothing reads it today: every authorization
+-- decision in this app goes through is_admin(), which is pinned to a single
+-- uid. It is here because a user-writable column called "role" sitting in the
+-- profiles table is a trap — the day someone writes a policy or a UI check
+-- against it, self-promotion to admin is a one-line PATCH away. Freezing it
+-- now costs nothing and means that day is safe.
 create or replace function public.guard_profile_columns()
 returns trigger
 language plpgsql
@@ -74,6 +81,7 @@ begin
   NEW.id             := OLD.id;
   NEW.email          := OLD.email;
   NEW.account_status := OLD.account_status;
+  NEW.role           := OLD.role;
   return NEW;
 end $$;
 
