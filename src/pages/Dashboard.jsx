@@ -90,7 +90,7 @@ export default function Dashboard() {
   const spendingSeries = useMemo(() => calculateSpendingSeries(transactions), [transactions]);
   const totalSpending = useMemo(() => calculateTotalSpending(transactions), [transactions]);
 
-  const names = nameVariants(profile, user?.email);
+  const names = nameVariants(profile, user?.user_metadata);
   const greeting = GREETINGS[tick % GREETINGS.length];
   const subtext = SUBTEXTS[tick % SUBTEXTS.length];
   const displayName = names[tick % names.length];

@@ -33,15 +33,21 @@ export function personLabel(user) {
 
 // The greeting name in a couple of registers — full name, then just the
 // first name — so the dashboard can rotate to something more casual. No
-// honorifics.
-export function nameVariants(profile, fallbackEmail) {
+// honorifics, and deliberately no email: the local half of an address is a
+// login credential, not what someone is called, and greeting a customer of a
+// bank by it reads as the machine not knowing who they are.
+//
+// `meta` is the auth user_metadata copy, which rides along with the session
+// and so is readable before the profiles row has been fetched. The profile
+// row wins wherever both have a value.
+export function nameVariants(profile, meta) {
+  const first = profile?.first_name || meta?.first_name || "";
+  const last = profile?.last_name || meta?.last_name || "";
+
   const out = [];
-  if (profile) {
-    if (profile.first_name && profile.last_name)
-      out.push(`${profile.first_name} ${profile.last_name}`);
-    if (profile.first_name) out.push(profile.first_name);
-  }
-  if (fallbackEmail) out.push(fallbackEmail.split("@")[0]);
+  if (first && last) out.push(`${first} ${last}`);
+  if (first) out.push(first);
+
   const unique = [...new Set(out)];
   return unique.length ? unique : ["there"];
 }

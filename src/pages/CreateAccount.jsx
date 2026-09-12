@@ -212,7 +212,10 @@ export default function CreateAccount() {
     setSubmitting(true);
 
     try {
-      const { data, error: signUpError } = await signUp(form.email, form.password);
+      const { data, error: signUpError } = await signUp(form.email, form.password, {
+        first_name: form.firstName,
+        last_name: form.lastName,
+      });
 
       if (signUpError) {
         setError(signUpError.message);

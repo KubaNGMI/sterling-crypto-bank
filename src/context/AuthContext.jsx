@@ -32,8 +32,17 @@ export function AuthProvider({ children }) {
     return { data, error };
   }
 
-  async function signUp(email, password) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  // `metadata` lands on the auth user as user_metadata, which travels with
+  // the session — so the first render after a sign-in already knows the
+  // person's name without waiting on a profiles fetch. Display fields only:
+  // user_metadata is writable by the user it belongs to, so nothing that
+  // grants access or status may ever be read back out of it.
+  async function signUp(email, password, metadata) {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      ...(metadata ? { options: { data: metadata } } : {}),
+    });
     return { data, error };
   }
 
