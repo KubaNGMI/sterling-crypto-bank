@@ -20,9 +20,16 @@ const DOC_FIELDS = [
 
 const money = formatUsd;
 
-export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
+export default function UserDetailDrawer({
+  user,
+  onClose,
+  onUpdateStatus,
+  onUpdateDocReview,
+}) {
   const [savingStatus, setSavingStatus] = useState(null);
   const [statusError, setStatusError] = useState(null);
+  const [savingDoc, setSavingDoc] = useState(null);
+  const [docError, setDocError] = useState(null);
   const [txs, setTxs] = useState([]);
   const [txLoading, setTxLoading] = useState(true);
 
@@ -61,6 +68,19 @@ export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
       setStatusError(err.message);
     } finally {
       setSavingStatus(null);
+    }
+  }
+
+  async function setDocReview(next) {
+    if (next === user.verification?.status) return;
+    setDocError(null);
+    setSavingDoc(next);
+    try {
+      await onUpdateDocReview(user.id, next);
+    } catch (err) {
+      setDocError(err.message);
+    } finally {
+      setSavingDoc(null);
     }
   }
 
@@ -137,7 +157,13 @@ export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
         </section>
 
         <section className="drawer__section">
-          <p className="label">Documents</p>
+          <div className="drawer__section-head">
+            <p className="label">Documents</p>
+            {user.verification?.status && (
+              <StatusPill status={user.verification.status} />
+            )}
+          </div>
+
           {docs.length === 0 ? (
             <p className="drawer__muted">No documents uploaded.</p>
           ) : (
@@ -152,6 +178,38 @@ export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
                 </button>
               ))}
             </div>
+          )}
+
+          {/* Only when there is a submitted record to rule on — proof-of-funds
+              files can exist without one, and there'd be nothing to update. */}
+          {user.verification && onUpdateDocReview && (
+            <>
+              <div className="doc-review">
+                <button
+                  className="doc-review__confirm"
+                  onClick={() => setDocReview("approved")}
+                  disabled={!!savingDoc || user.verification.status === "approved"}
+                >
+                  {savingDoc === "approved"
+                    ? "Confirming…"
+                    : user.verification.status === "approved"
+                    ? "Documents confirmed"
+                    : "Confirm documents"}
+                </button>
+                <button
+                  className="doc-review__reject"
+                  onClick={() => setDocReview("rejected")}
+                  disabled={!!savingDoc || user.verification.status === "rejected"}
+                >
+                  {savingDoc === "rejected" ? "…" : "Reject"}
+                </button>
+              </div>
+              <p className="drawer__muted doc-review__note">
+                Confirming also sets the account to verified; rejecting sets it
+                to rejected. Use Account status above to override.
+              </p>
+              {docError && <p className="drawer__err">{docError}</p>}
+            </>
           )}
         </section>
 
@@ -244,6 +302,36 @@ export default function UserDetailDrawer({ user, onClose, onUpdateStatus }) {
             background: var(--wash-red); border: 1px solid var(--wash-red-line);
             border-radius: 8px; padding: 8px 10px;
           }
+
+          .doc-review { display: flex; gap: 8px; margin-top: 12px; }
+          .doc-review__confirm,
+          .doc-review__reject {
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 9px 14px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+          }
+          .doc-review__confirm {
+            flex: 1;
+            color: #fff;
+            background: var(--accent);
+            border: 1px solid var(--accent);
+          }
+          .doc-review__confirm:hover:not(:disabled) { background: var(--accent-deep); }
+          .doc-review__reject {
+            color: var(--text-muted);
+            background: none;
+            border: 1px solid var(--glass-border);
+          }
+          .doc-review__reject:hover:not(:disabled) {
+            color: var(--red);
+            border-color: var(--red);
+          }
+          .doc-review__confirm:disabled,
+          .doc-review__reject:disabled { opacity: 0.5; cursor: not-allowed; }
+          .doc-review__note { margin-top: 8px; }
 
           .status-grid { display: flex; flex-wrap: wrap; gap: 8px; }
           .status-choice {

@@ -10,6 +10,13 @@ export const ACCOUNT_STATUSES = [
   "suspended",
 ];
 
+// What an admin can decide about a submitted document set. "pending" is the
+// state the upload arrives in, not something you set by hand.
+export const DOC_REVIEW_STATUSES = ["approved", "rejected"];
+
+// Ruling on the documents carries the account with it.
+const DOC_REVIEW_TO_ACCOUNT = { approved: "verified", rejected: "rejected" };
+
 // Every profile, each with its latest verification-doc record attached.
 export function useAdminUsers() {
   const [users, setUsers] = useState([]);
@@ -65,5 +72,52 @@ export function useAdminUsers() {
     );
   }, []);
 
-  return { users, loading, error, refetch: fetchUsers, updateStatus };
+  // Ruling on the documents moves the account with it — signing off on the
+  // paperwork is what verification means here, so it is one decision rather
+  // than two.
+  //
+  // Two writes, not one transaction: if the second fails the caller gets the
+  // error and the account simply hasn't moved yet. Both are idempotent, so
+  // clicking again finishes the job.
+  const updateDocReview = useCallback(async (userId, status) => {
+    await mockLatency(500, 1500);
+
+    const { error: vErr } = await supabase
+      .from("verifications")
+      .update({ status })
+      .eq("user_id", userId);
+    if (vErr) throw new Error(vErr.message);
+
+    const accountStatus = DOC_REVIEW_TO_ACCOUNT[status];
+    if (accountStatus) {
+      const { error: pErr } = await supabase
+        .from("profiles")
+        .update({ account_status: accountStatus })
+        .eq("id", userId);
+      if (pErr) throw new Error(pErr.message);
+    }
+
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === userId
+          ? {
+              ...u,
+              account_status: accountStatus ?? u.account_status,
+              verification: u.verification
+                ? { ...u.verification, status }
+                : u.verification,
+            }
+          : u
+      )
+    );
+  }, []);
+
+  return {
+    users,
+    loading,
+    error,
+    refetch: fetchUsers,
+    updateStatus,
+    updateDocReview,
+  };
 }

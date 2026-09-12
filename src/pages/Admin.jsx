@@ -14,7 +14,8 @@ const TABS = [
 
 export default function Admin() {
   const [tab, setTab] = useState("users");
-  const { users, loading, error, refetch, updateStatus } = useAdminUsers();
+  const { users, loading, error, refetch, updateStatus, updateDocReview } =
+    useAdminUsers();
 
   return (
     <div>
@@ -48,6 +49,7 @@ export default function Admin() {
           error={error}
           onRefetch={refetch}
           onUpdateStatus={updateStatus}
+          onUpdateDocReview={updateDocReview}
         />
       )}
       {tab === "ledger" && <AdminLedger users={users} usersLoading={loading} />}

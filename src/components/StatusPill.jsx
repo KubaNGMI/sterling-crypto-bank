@@ -4,6 +4,8 @@ const TONE = {
   unverified: { bg: "var(--fill-hover)", fg: "var(--text-muted)" },
   pending: { bg: "var(--wash-amber-strong)", fg: "var(--orange)" },
   verified: { bg: "var(--wash-green-strong)", fg: "var(--green)" },
+  // Document review uses "approved" where an account uses "verified".
+  approved: { bg: "var(--wash-green-strong)", fg: "var(--green)" },
   rejected: { bg: "var(--wash-red-strong)", fg: "var(--red)" },
   suspended: { bg: "var(--wash-red-strong)", fg: "var(--red)" },
 };

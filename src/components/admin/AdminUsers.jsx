@@ -16,7 +16,14 @@ const RANGE_LABELS = {
 
 const displayName = (u) => fullName(u) || "Unnamed";
 
-export default function AdminUsers({ users, loading, error, onRefetch, onUpdateStatus }) {
+export default function AdminUsers({
+  users,
+  loading,
+  error,
+  onRefetch,
+  onUpdateStatus,
+  onUpdateDocReview,
+}) {
   const [openUser, setOpenUser] = useState(null);
   const [busyId, setBusyId] = useState(null);
   const [rowError, setRowError] = useState(null);
@@ -102,6 +109,7 @@ export default function AdminUsers({ users, loading, error, onRefetch, onUpdateS
           user={users.find((u) => u.id === openUser.id) || openUser}
           onClose={() => setOpenUser(null)}
           onUpdateStatus={onUpdateStatus}
+          onUpdateDocReview={onUpdateDocReview}
         />
       )}
 
