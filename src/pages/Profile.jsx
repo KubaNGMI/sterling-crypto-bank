@@ -4,13 +4,20 @@ import { useVerification } from "../hooks/useVerification";
 import { useProfile } from "../hooks/useProfile";
 import { fullName, genderLabel, accountId } from "../utils/identity";
 import VerificationUpload from "../components/VerificationUpload";
+import ProofOfFundsUpload from "../components/ProofOfFundsUpload";
 import StatusPill from "../components/StatusPill";
 import CopyButton from "../components/CopyButton";
 
 export default function Profile() {
   const { user } = useAuth();
   const { verification, loading, refetch } = useVerification();
-  const { profile, loading: profileLoading } = useProfile();
+  const { profile, loading: profileLoading, refetch: refetchProfile } = useProfile();
+
+  // Signup collects where the money comes from but can no longer collect the
+  // evidence — that needs a session, which doesn't exist until the email is
+  // confirmed. So the ask lands here instead, and stays until it's answered.
+  const needsProofOfFunds =
+    !profileLoading && (profile?.proof_of_funds_paths?.length ?? 0) === 0;
 
   const accountStatus = profile?.account_status ?? "unverified";
   const id = accountId(user?.id);
@@ -97,7 +104,12 @@ export default function Profile() {
           </dl>
         </div>
 
-        <VerificationUpload verification={verification} onComplete={refetch} />
+        <div className="profile-uploads">
+          <VerificationUpload verification={verification} onComplete={refetch} />
+          {needsProofOfFunds && (
+            <ProofOfFundsUpload profile={profile} onComplete={refetchProfile} />
+          )}
+        </div>
       </div>
 
       <style>{`
@@ -106,6 +118,14 @@ export default function Profile() {
           grid-template-columns: 340px 1fr;
           gap: 24px;
           align-items: start;
+        }
+        .profile-uploads {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          /* Grid children default to min-width:auto, which would let a long
+             filename push this column wider than its track. */
+          min-width: 0;
         }
         .account-card__head {
           display: flex;

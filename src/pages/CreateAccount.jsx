@@ -1,33 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { supabase } from "../supabaseClient";
 import { COUNTRIES } from "../data/countries";
 import Select from "../components/Select";
 import PhoneInput from "../components/PhoneInput";
 import Flag from "../components/Flag";
 import { GENDER_OPTIONS } from "../utils/identity";
 import AuthShell from "../components/AuthShell";
-
-// Drawn line icons on the app's 16px / currentColor grid, same convention as
-// the sidebar and the empty states. The wizard used emoji here, which render
-// differently on every platform and read as decoration rather than interface.
-function LineIcon({ children, className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.1"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {children}
-    </svg>
-  );
-}
+import LineIcon from "../components/LineIcon";
+import { SOURCE_OF_FUNDS_OPTIONS } from "../data/sourceOfFunds";
 
 const COUNTRY_OPTIONS = [
   ...COUNTRIES.map((c) => ({
@@ -48,63 +29,6 @@ const COUNTRY_OPTIONS = [
   },
 ];
 
-const SOURCE_OF_FUNDS_OPTIONS = [
-  {
-    key: "employment",
-    label: "Employment / Freelance / Self-Employed",
-    hint: "Salary, bonus, pension, or independent work",
-    icon: (
-      <LineIcon>
-        <rect x="2" y="5" width="12" height="8.5" rx="1.5" />
-        <path d="M6 5V3.8A1.3 1.3 0 0 1 7.3 2.5h1.4A1.3 1.3 0 0 1 10 3.8V5" />
-        <path d="M2 8.6h12" />
-      </LineIcon>
-    ),
-    proofHint: "Recent payslip, employment letter, or tax return",
-  },
-  {
-    key: "investments",
-    label: "Investments / Financial Assets",
-    hint: "Dividends, stock sales, or investment returns",
-    icon: (
-      <LineIcon>
-        <path d="M2.2 13h11.6" />
-        <path d="M3.6 10.4 6.6 7.4l2 2 4.2-4.7" />
-        <path d="M10.2 4.7h2.8v2.8" />
-      </LineIcon>
-    ),
-    proofHint: "Brokerage statement or dividend confirmation",
-  },
-  {
-    key: "real_estate",
-    label: "Real Estate",
-    hint: "Sale of property or land",
-    icon: (
-      <LineIcon>
-        <path d="M2.5 7.2 8 3l5.5 4.2" />
-        <path d="M4 8.3v5.2h8V8.3" />
-        <path d="M6.8 13.5V10h2.4v3.5" />
-      </LineIcon>
-    ),
-    proofHint: "Sale contract, deed, or settlement statement",
-  },
-  {
-    key: "other",
-    label: "Other Sources",
-    hint: "Gifts, gaming/lottery wins, or legal settlements",
-    icon: (
-      <LineIcon>
-        <rect x="2.5" y="6.6" width="11" height="6.9" rx="1" />
-        <path d="M2.5 9.7h11" />
-        <path d="M8 6.6v6.9" />
-        <circle cx="6.5" cy="5.1" r="1.4" />
-        <circle cx="9.5" cy="5.1" r="1.4" />
-      </LineIcon>
-    ),
-    proofHint: "Gift letter, payout notice, or settlement letter",
-  },
-];
-
 const FUNDS_RANGE_OPTIONS = [
   { key: "under_10k", label: "Under $10,000" },
   { key: "10k_50k", label: "$10,000 – $50,000" },
@@ -113,7 +37,8 @@ const FUNDS_RANGE_OPTIONS = [
   { key: "over_1m", label: "Over $1,000,000" },
 ];
 
-const STEP_LABELS = ["Account", "Location", "Source", "Range", "Proof"];
+const STEP_LABELS = ["Account", "Location", "Source", "Range"];
+const LAST_STEP = STEP_LABELS.length;
 
 export default function CreateAccount() {
   const [step, setStep] = useState(1);
@@ -128,7 +53,6 @@ export default function CreateAccount() {
     countryOfResidence: "",
     sourceOfFunds: [],
     fundsRange: "",
-    proofFiles: [],
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -150,18 +74,6 @@ export default function CreateAccount() {
     }));
   }
 
-  function addProofFiles(files) {
-    const entries = files.map((file) => ({ id: crypto.randomUUID(), file }));
-    setForm((prev) => ({ ...prev, proofFiles: [...prev.proofFiles, ...entries] }));
-  }
-
-  function removeProofFile(id) {
-    setForm((prev) => ({
-      ...prev,
-      proofFiles: prev.proofFiles.filter((entry) => entry.id !== id),
-    }));
-  }
-
   function validateStep(currentStep) {
     if (currentStep === 1) {
       if (!form.firstName || !form.lastName) return "Enter your first and last name.";
@@ -179,9 +91,6 @@ export default function CreateAccount() {
     }
     if (currentStep === 4) {
       if (!form.fundsRange) return "Select an approximate range.";
-    }
-    if (currentStep === 5) {
-      if (form.proofFiles.length === 0) return "Upload at least one supporting document.";
     }
     return null;
   }
@@ -202,7 +111,7 @@ export default function CreateAccount() {
   }
 
   async function handleSubmit() {
-    const validationError = validateStep(5);
+    const validationError = validateStep(LAST_STEP);
     if (validationError) {
       setError(validationError);
       return;
@@ -212,9 +121,24 @@ export default function CreateAccount() {
     setSubmitting(true);
 
     try {
+      // Everything the wizard collected rides along as auth metadata, and the
+      // handle_new_user trigger writes the profile row from it on the server.
+      // The browser deliberately doesn't write that row itself any more: with
+      // email confirmation ON there is no session at this moment, so the write
+      // would be refused by RLS and every answer below would be thrown away.
+      //
+      // account_status is not in here. The trigger hardcodes it. Metadata is
+      // writable by the user it belongs to, so a status sent from the browser
+      // would be a self-verification hole.
       const { data, error: signUpError } = await signUp(form.email, form.password, {
         first_name: form.firstName,
         last_name: form.lastName,
+        gender: form.gender,
+        phone: form.phone,
+        citizenship: form.citizenship,
+        country_of_residence: form.countryOfResidence,
+        source_of_funds: form.sourceOfFunds,
+        funds_range: form.fundsRange,
       });
 
       if (signUpError) {
@@ -222,53 +146,11 @@ export default function CreateAccount() {
         return;
       }
 
-      // Save the profile fields collected across the wizard. This needs an
-      // active session (email confirmation OFF) and either RLS off or a
-      // "user writes own profile" policy — otherwise it fails and we say so
-      // instead of dropping the user into a nameless account. A Postgres
-      // trigger on auth.users that seeds profiles(id) makes this bulletproof.
-      const hasSession = Boolean(data?.session);
-
-      if (data?.user && hasSession) {
-        const proofPaths = [];
-        for (const { file } of form.proofFiles) {
-          const ext = file.name.split(".").pop();
-          const path = `${data.user.id}/proof_of_funds/${Date.now()}-${proofPaths.length}.${ext}`;
-          const { error: uploadError } = await supabase.storage
-            .from("kyc-documents")
-            .upload(path, file, { upsert: true });
-          if (!uploadError) proofPaths.push(path);
-        }
-
-        const { error: profileError } = await supabase.from("profiles").upsert(
-          {
-            id: data.user.id,
-            email: form.email,
-            account_status: "unverified",
-            first_name: form.firstName,
-            last_name: form.lastName,
-            gender: form.gender,
-            phone: form.phone,
-            citizenship: form.citizenship,
-            country_of_residence: form.countryOfResidence,
-            source_of_funds: form.sourceOfFunds,
-            funds_range: form.fundsRange,
-            proof_of_funds_paths: proofPaths,
-          },
-          { onConflict: "id" }
-        );
-
-        if (profileError) {
-          setError(
-            `Account created, but saving your details failed: ${profileError.message}`
-          );
-          return;
-        }
-      }
-
-      if (data?.user && !hasSession) {
+      // No session means email confirmation is on and the account is waiting
+      // on a click in the inbox. The profile is already written either way.
+      if (data?.user && !data.session) {
         setSuccessMessage(
-          "Account created. Confirm your email to sign in. (Turn off email confirmation in Supabase so your profile details save automatically.)"
+          `Account created. We've sent a confirmation link to ${form.email} — open it to sign in for the first time.`
         );
         return;
       }
@@ -434,62 +316,6 @@ export default function CreateAccount() {
         </div>
       )}
 
-      {step === 5 && (
-        <div className="step-form">
-          <p className="step-description">
-            Upload documentation matching the source{form.sourceOfFunds.length > 1 ? "s" : ""} you selected:
-          </p>
-
-          <ul className="proof-hint-list">
-            {SOURCE_OF_FUNDS_OPTIONS.filter((opt) => form.sourceOfFunds.includes(opt.key)).map((opt) => (
-              <li key={opt.key}>
-                <strong>{opt.label}:</strong> {opt.proofHint}
-              </li>
-            ))}
-          </ul>
-
-          <label className="dropzone">
-            <input
-              type="file"
-              multiple
-              accept="image/*,application/pdf"
-              onChange={(e) => {
-                addProofFiles(Array.from(e.target.files));
-                e.target.value = "";
-              }}
-              hidden
-            />
-            <span className="dropzone-icon">
-              <LineIcon>
-                <path d="M9 2H4.5A1.5 1.5 0 0 0 3 3.5v9A1.5 1.5 0 0 0 4.5 14h7a1.5 1.5 0 0 0 1.5-1.5V6L9 2Z" />
-                <path d="M9 2v4h4" />
-              </LineIcon>
-            </span>
-            <span className="dropzone-text">Click to upload files</span>
-            <span className="dropzone-hint">PDF or image, multiple files allowed</span>
-          </label>
-
-          {form.proofFiles.length > 0 && (
-            <div className="file-list">
-              {form.proofFiles.map((entry) => (
-                <div className="file-row" key={entry.id}>
-                  <span className="file-added-badge">✓</span>
-                  <span className="file-name">{entry.file.name}</span>
-                  <button
-                    type="button"
-                    className="file-remove"
-                    onClick={() => removeProofFile(entry.id)}
-                    aria-label={`Remove ${entry.file.name}`}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
       {error && <p className="error-text">{error}</p>}
       {successMessage && <p className="success-text">{successMessage}</p>}
 
@@ -499,7 +325,7 @@ export default function CreateAccount() {
             Back
           </button>
         )}
-        {step < 5 ? (
+        {step < LAST_STEP ? (
           <button type="button" className="login-btn" onClick={handleNext}>
             Next <span className="arrow">›</span>
           </button>
@@ -674,80 +500,7 @@ export default function CreateAccount() {
           background: var(--accent);
         }
 
-        .proof-hint-list {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          font-size: 12.5px;
-          line-height: 1.5;
-          color: var(--text-muted);
-          background: var(--card-bg-alt);
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          padding: 12px 14px;
-          list-style: none;
-        }
-        .proof-hint-list strong { color: var(--text); font-weight: 600; }
-
-        .dropzone {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          text-align: center;
-          border: 1.5px dashed var(--border);
-          border-radius: 12px;
-          padding: 26px 16px;
-          cursor: pointer;
-          background: rgba(255,255,255,0.02);
-          transition: border-color 0.15s, background 0.15s;
-        }
-        .dropzone:hover { border-color: var(--accent); background: rgba(99,102,241,0.06); }
-        .dropzone-icon { display: flex; color: var(--text-muted); }
-        .dropzone-icon svg { width: 26px; height: 26px; display: block; }
         .ui-select-globe { width: 15px; height: 15px; display: block; }
-        .dropzone-text { font-size: 13px; font-weight: 600; color: var(--text); }
-        .dropzone-hint { font-size: 11.5px; color: var(--text-muted); }
-
-        .file-list { display: flex; flex-direction: column; gap: 8px; }
-        .file-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--card-bg-alt);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          padding: 8px 12px;
-        }
-        .file-added-badge {
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          background: var(--green);
-          color: #06210f;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 11px;
-          font-weight: 700;
-          flex-shrink: 0;
-        }
-        .file-name {
-          flex: 1;
-          font-size: 12.5px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        .file-remove {
-          background: none;
-          border: none;
-          color: var(--text-muted);
-          font-size: 11.5px;
-          padding: 2px 4px;
-        }
-        .file-remove:hover { color: var(--red); }
 
         .error-text {
           margin-top: 12px;
