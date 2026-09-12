@@ -1,9 +1,10 @@
 // The chrome behind every signed-out screen: ambient glow, wordmark, card.
 //
-// Login and CreateAccount predate this and still carry their own copies of
-// the same CSS under .login-* names. They can be migrated onto this; it's
-// kept under .auth-* so the two sets can't fight while that's outstanding.
-export default function AuthShell({ tag, children }) {
+// `width` exists because the signup wizard needs more room for its five-step
+// indicator than a two-field login does. Everything else is identical across
+// the three screens, which is why they share this instead of each carrying a
+// copy of it.
+export default function AuthShell({ tag, width = 380, children }) {
   return (
     <div className="auth-wrap">
       <div className="auth-glow" />
@@ -12,7 +13,7 @@ export default function AuthShell({ tag, children }) {
         <span className="auth-infinity">∞</span> Sterling Crypto Bank
       </div>
 
-      <div className="auth-card">
+      <div className="auth-card" style={{ width }}>
         {tag && <p className="auth-tag">{tag}</p>}
         {children}
       </div>
@@ -56,7 +57,6 @@ export default function AuthShell({ tag, children }) {
           border: 1px solid var(--border);
           border-radius: 18px;
           padding: 32px;
-          width: 380px;
           max-width: 100%;
           box-shadow: 0 20px 60px rgba(0,0,0,0.35);
         }

@@ -7,6 +7,7 @@ import Select from "../components/Select";
 import PhoneInput from "../components/PhoneInput";
 import Flag from "../components/Flag";
 import { GENDER_OPTIONS } from "../utils/identity";
+import AuthShell from "../components/AuthShell";
 
 // Drawn line icons on the app's 16px / currentColor grid, same convention as
 // the sidebar and the empty states. The wizard used emoji here, which render
@@ -276,309 +277,247 @@ export default function CreateAccount() {
   }
 
   return (
-    <div className="login-wrap">
-      <div className="login-glow" />
-
-      <div className="login-brand">
-        <span className="infinity">∞</span> Sterling Crypto Bank
+    <AuthShell tag="CREATE ACCOUNT" width={420}>
+      <div className="step-indicator">
+        {STEP_LABELS.map((label, i) => (
+          <div className="step-item" key={label}>
+            <div className={"step-dot" + (i + 1 <= step ? " active" : "")}>
+              {i + 1}
+            </div>
+            <span className={"step-label" + (i + 1 === step ? " current" : "")}>
+              {label}
+            </span>
+          </div>
+        ))}
       </div>
 
-      <div className="login-card">
-        <p className="login-tag">CREATE ACCOUNT</p>
-
-        <div className="step-indicator">
-          {STEP_LABELS.map((label, i) => (
-            <div className="step-item" key={label}>
-              <div className={"step-dot" + (i + 1 <= step ? " active" : "")}>
-                {i + 1}
-              </div>
-              <span className={"step-label" + (i + 1 === step ? " current" : "")}>
-                {label}
-              </span>
+      {step === 1 && (
+        <div className="step-form">
+          <div className="field-row">
+            <div className="field">
+              <label htmlFor="signup-first-name" className="sr-only">First name</label>
+              <input
+                id="signup-first-name"
+                type="text"
+                placeholder="First name"
+                value={form.firstName}
+                onChange={(e) => update("firstName", e.target.value)}
+              />
             </div>
+            <div className="field">
+              <label htmlFor="signup-last-name" className="sr-only">Last name</label>
+              <input
+                id="signup-last-name"
+                type="text"
+                placeholder="Last name"
+                value={form.lastName}
+                onChange={(e) => update("lastName", e.target.value)}
+              />
+            </div>
+          </div>
+
+          <label className="field-label">Gender</label>
+          <div className="field">
+            <Select
+              options={GENDER_OPTIONS}
+              value={form.gender}
+              onChange={(v) => update("gender", v)}
+              placeholder="Select gender"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="signup-email" className="sr-only">Email</label>
+            <input
+              id="signup-email"
+              type="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={(e) => update("email", e.target.value)}
+            />
+          </div>
+
+          <PhoneInput value={form.phone} onChange={(v) => update("phone", v)} />
+
+          <div className="field">
+            <label htmlFor="signup-password" className="sr-only">Password</label>
+            <input
+              id="signup-password"
+              type="password"
+              placeholder="Create a password"
+              value={form.password}
+              onChange={(e) => update("password", e.target.value)}
+            />
+          </div>
+        </div>
+      )}
+
+      {step === 2 && (
+        <div className="step-form">
+          <label className="field-label">Citizenship</label>
+          <div className="field">
+            <Select
+              options={COUNTRY_OPTIONS}
+              value={form.citizenship}
+              onChange={(v) => update("citizenship", v)}
+              placeholder="Select citizenship"
+              searchPlaceholder="Search country..."
+            />
+          </div>
+
+          <label className="field-label">Country of Residence</label>
+          <div className="field">
+            <Select
+              options={COUNTRY_OPTIONS}
+              value={form.countryOfResidence}
+              onChange={(v) => update("countryOfResidence", v)}
+              placeholder="Select country of residence"
+              searchPlaceholder="Search country..."
+            />
+          </div>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className="step-form">
+          <p className="step-description">Select all that apply:</p>
+          {SOURCE_OF_FUNDS_OPTIONS.map((opt) => (
+            <label
+              className={"sof-card" + (form.sourceOfFunds.includes(opt.key) ? " checked" : "")}
+              key={opt.key}
+            >
+              <input
+                type="checkbox"
+                checked={form.sourceOfFunds.includes(opt.key)}
+                onChange={() => toggleSourceOfFunds(opt.key)}
+                hidden
+              />
+              <span className="sof-icon-wrap">{opt.icon}</span>
+              <span className="sof-text">
+                <span className="sof-label">{opt.label}</span>
+                <span className="sof-hint">{opt.hint}</span>
+              </span>
+              <span className="sof-badge">
+                {form.sourceOfFunds.includes(opt.key) ? "✓" : ""}
+              </span>
+            </label>
           ))}
         </div>
+      )}
 
-        {step === 1 && (
-          <div className="step-form">
-            <div className="field-row">
-              <div className="field">
-                <label htmlFor="signup-first-name" className="sr-only">First name</label>
-                <input
-                  id="signup-first-name"
-                  type="text"
-                  placeholder="First name"
-                  value={form.firstName}
-                  onChange={(e) => update("firstName", e.target.value)}
-                />
-              </div>
-              <div className="field">
-                <label htmlFor="signup-last-name" className="sr-only">Last name</label>
-                <input
-                  id="signup-last-name"
-                  type="text"
-                  placeholder="Last name"
-                  value={form.lastName}
-                  onChange={(e) => update("lastName", e.target.value)}
-                />
-              </div>
-            </div>
-
-            <label className="field-label">Gender</label>
-            <div className="field">
-              <Select
-                options={GENDER_OPTIONS}
-                value={form.gender}
-                onChange={(v) => update("gender", v)}
-                placeholder="Select gender"
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="signup-email" className="sr-only">Email</label>
-              <input
-                id="signup-email"
-                type="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={(e) => update("email", e.target.value)}
-              />
-            </div>
-
-            <PhoneInput value={form.phone} onChange={(v) => update("phone", v)} />
-
-            <div className="field">
-              <label htmlFor="signup-password" className="sr-only">Password</label>
-              <input
-                id="signup-password"
-                type="password"
-                placeholder="Create a password"
-                value={form.password}
-                onChange={(e) => update("password", e.target.value)}
-              />
-            </div>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="step-form">
-            <label className="field-label">Citizenship</label>
-            <div className="field">
-              <Select
-                options={COUNTRY_OPTIONS}
-                value={form.citizenship}
-                onChange={(v) => update("citizenship", v)}
-                placeholder="Select citizenship"
-                searchPlaceholder="Search country..."
-              />
-            </div>
-
-            <label className="field-label">Country of Residence</label>
-            <div className="field">
-              <Select
-                options={COUNTRY_OPTIONS}
-                value={form.countryOfResidence}
-                onChange={(v) => update("countryOfResidence", v)}
-                placeholder="Select country of residence"
-                searchPlaceholder="Search country..."
-              />
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="step-form">
-            <p className="step-description">Select all that apply:</p>
-            {SOURCE_OF_FUNDS_OPTIONS.map((opt) => (
+      {step === 4 && (
+        <div className="step-form">
+          <p className="step-description">
+            Approximate amount, after tax:
+          </p>
+          <div className="range-list">
+            {FUNDS_RANGE_OPTIONS.map((opt) => (
               <label
-                className={"sof-card" + (form.sourceOfFunds.includes(opt.key) ? " checked" : "")}
+                className={"range-card" + (form.fundsRange === opt.key ? " checked" : "")}
                 key={opt.key}
               >
                 <input
-                  type="checkbox"
-                  checked={form.sourceOfFunds.includes(opt.key)}
-                  onChange={() => toggleSourceOfFunds(opt.key)}
+                  type="radio"
+                  name="fundsRange"
+                  checked={form.fundsRange === opt.key}
+                  onChange={() => update("fundsRange", opt.key)}
                   hidden
                 />
-                <span className="sof-icon-wrap">{opt.icon}</span>
-                <span className="sof-text">
-                  <span className="sof-label">{opt.label}</span>
-                  <span className="sof-hint">{opt.hint}</span>
-                </span>
-                <span className="sof-badge">
-                  {form.sourceOfFunds.includes(opt.key) ? "✓" : ""}
-                </span>
+                <span className="range-label">{opt.label}</span>
+                <span className="range-radio" />
               </label>
             ))}
           </div>
-        )}
+        </div>
+      )}
 
-        {step === 4 && (
-          <div className="step-form">
-            <p className="step-description">
-              Approximate amount, after tax:
-            </p>
-            <div className="range-list">
-              {FUNDS_RANGE_OPTIONS.map((opt) => (
-                <label
-                  className={"range-card" + (form.fundsRange === opt.key ? " checked" : "")}
-                  key={opt.key}
-                >
-                  <input
-                    type="radio"
-                    name="fundsRange"
-                    checked={form.fundsRange === opt.key}
-                    onChange={() => update("fundsRange", opt.key)}
-                    hidden
-                  />
-                  <span className="range-label">{opt.label}</span>
-                  <span className="range-radio" />
-                </label>
+      {step === 5 && (
+        <div className="step-form">
+          <p className="step-description">
+            Upload documentation matching the source{form.sourceOfFunds.length > 1 ? "s" : ""} you selected:
+          </p>
+
+          <ul className="proof-hint-list">
+            {SOURCE_OF_FUNDS_OPTIONS.filter((opt) => form.sourceOfFunds.includes(opt.key)).map((opt) => (
+              <li key={opt.key}>
+                <strong>{opt.label}:</strong> {opt.proofHint}
+              </li>
+            ))}
+          </ul>
+
+          <label className="dropzone">
+            <input
+              type="file"
+              multiple
+              accept="image/*,application/pdf"
+              onChange={(e) => {
+                addProofFiles(Array.from(e.target.files));
+                e.target.value = "";
+              }}
+              hidden
+            />
+            <span className="dropzone-icon">
+              <LineIcon>
+                <path d="M9 2H4.5A1.5 1.5 0 0 0 3 3.5v9A1.5 1.5 0 0 0 4.5 14h7a1.5 1.5 0 0 0 1.5-1.5V6L9 2Z" />
+                <path d="M9 2v4h4" />
+              </LineIcon>
+            </span>
+            <span className="dropzone-text">Click to upload files</span>
+            <span className="dropzone-hint">PDF or image, multiple files allowed</span>
+          </label>
+
+          {form.proofFiles.length > 0 && (
+            <div className="file-list">
+              {form.proofFiles.map((entry) => (
+                <div className="file-row" key={entry.id}>
+                  <span className="file-added-badge">✓</span>
+                  <span className="file-name">{entry.file.name}</span>
+                  <button
+                    type="button"
+                    className="file-remove"
+                    onClick={() => removeProofFile(entry.id)}
+                    aria-label={`Remove ${entry.file.name}`}
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {step === 5 && (
-          <div className="step-form">
-            <p className="step-description">
-              Upload documentation matching the source{form.sourceOfFunds.length > 1 ? "s" : ""} you selected:
-            </p>
-
-            <ul className="proof-hint-list">
-              {SOURCE_OF_FUNDS_OPTIONS.filter((opt) => form.sourceOfFunds.includes(opt.key)).map((opt) => (
-                <li key={opt.key}>
-                  <strong>{opt.label}:</strong> {opt.proofHint}
-                </li>
-              ))}
-            </ul>
-
-            <label className="dropzone">
-              <input
-                type="file"
-                multiple
-                accept="image/*,application/pdf"
-                onChange={(e) => {
-                  addProofFiles(Array.from(e.target.files));
-                  e.target.value = "";
-                }}
-                hidden
-              />
-              <span className="dropzone-icon">
-                <LineIcon>
-                  <path d="M9 2H4.5A1.5 1.5 0 0 0 3 3.5v9A1.5 1.5 0 0 0 4.5 14h7a1.5 1.5 0 0 0 1.5-1.5V6L9 2Z" />
-                  <path d="M9 2v4h4" />
-                </LineIcon>
-              </span>
-              <span className="dropzone-text">Click to upload files</span>
-              <span className="dropzone-hint">PDF or image, multiple files allowed</span>
-            </label>
-
-            {form.proofFiles.length > 0 && (
-              <div className="file-list">
-                {form.proofFiles.map((entry) => (
-                  <div className="file-row" key={entry.id}>
-                    <span className="file-added-badge">✓</span>
-                    <span className="file-name">{entry.file.name}</span>
-                    <button
-                      type="button"
-                      className="file-remove"
-                      onClick={() => removeProofFile(entry.id)}
-                      aria-label={`Remove ${entry.file.name}`}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {error && <p className="error-text">{error}</p>}
-        {successMessage && <p className="success-text">{successMessage}</p>}
-
-        <div className="step-actions">
-          {step > 1 && (
-            <button type="button" className="back-btn" onClick={handleBack}>
-              Back
-            </button>
-          )}
-          {step < 5 ? (
-            <button type="button" className="login-btn" onClick={handleNext}>
-              Next <span className="arrow">›</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="login-btn"
-              onClick={handleSubmit}
-              disabled={submitting}
-            >
-              {submitting ? "Creating account..." : "Create Account"}{" "}
-              <span className="arrow">›</span>
-            </button>
           )}
         </div>
+      )}
 
-        <p className="signup-line">
-          Already have an account? <Link to="/login">Log In</Link>
-        </p>
+      {error && <p className="error-text">{error}</p>}
+      {successMessage && <p className="success-text">{successMessage}</p>}
+
+      <div className="step-actions">
+        {step > 1 && (
+          <button type="button" className="back-btn" onClick={handleBack}>
+            Back
+          </button>
+        )}
+        {step < 5 ? (
+          <button type="button" className="login-btn" onClick={handleNext}>
+            Next <span className="arrow">›</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="login-btn"
+            onClick={handleSubmit}
+            disabled={submitting}
+          >
+            {submitting ? "Creating account..." : "Create Account"}{" "}
+            <span className="arrow">›</span>
+          </button>
+        )}
       </div>
 
+      <p className="signup-line">
+        Already have an account? <Link to="/login">Log In</Link>
+      </p>
+
       <style>{`
-        .login-wrap {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          background: var(--bg);
-          position: relative;
-          overflow: hidden;
-          padding: 40px 20px;
-        }
-        .login-glow {
-          position: absolute;
-          top: -20%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 700px;
-          height: 700px;
-          background: radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(99,102,241,0) 70%);
-          pointer-events: none;
-        }
-
-        .login-brand {
-          position: relative;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 19px;
-          font-weight: 700;
-          color: var(--text);
-          margin-bottom: 28px;
-        }
-        .infinity { color: var(--accent); font-size: 21px; }
-
-        .login-card {
-          position: relative;
-          background: var(--card-bg);
-          border: 1px solid var(--border);
-          border-radius: 18px;
-          padding: 32px;
-          width: 420px;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-        }
-
-        .login-tag {
-          font-size: 12.5px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          color: var(--text-muted);
-          margin-bottom: 24px;
-        }
-
         .step-indicator {
           display: flex;
           justify-content: space-between;
@@ -870,6 +809,6 @@ export default function CreateAccount() {
         .signup-line a { color: var(--accent-text); font-weight: 600; }
         .signup-line a:hover { text-decoration: underline; }
       `}</style>
-    </div>
+    </AuthShell>
   );
 }
