@@ -129,13 +129,32 @@ export default function PendingTransactions({ transactions }) {
           color: var(--orange);
         }
         .pending-date { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
-        .pending-right { text-align: right; }
+        /* min-width: 0 so this half can actually shrink. Without it the 220px
+           reason sets a floor the flex row can't go below, and the block gets
+           laid over .pending-left instead of squeezing it. */
+        .pending-right { text-align: right; min-width: 0; }
         .pending-amount { font-size: 14px; font-weight: 600; color: var(--green); }
         .pending-reason {
           font-size: 12.5px;
           color: var(--text-muted);
           margin-top: 2px;
           max-width: 220px;
+          /* Deposit notes carry a transaction hash, which is one long
+             unbreakable token and will happily leave the card without this. */
+          overflow-wrap: anywhere;
+        }
+
+        /* Side by side needs roughly 280px before the two halves start
+           fighting; a phone card has 285px of inner width, so below this the
+           row stacks instead. */
+        @media (max-width: 560px) {
+          .pending-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+          }
+          .pending-right { text-align: left; }
+          .pending-reason { max-width: none; }
         }
         .pending-contact {
           margin-top: 16px;

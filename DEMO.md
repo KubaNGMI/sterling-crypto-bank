@@ -45,6 +45,18 @@ returns `null` when `DEMO_MODE` is false.
 documents. `tone="quiet"` is used on the auth screens, where it's context rather
 than a warning.
 
+### Outside the switch's reach
+
+**Email templates.** `supabase/email-templates/*.html` carry their own demo
+disclaimer, because a mail arriving from "Sterling Crypto Bank" is read away
+from the app entirely. They live in the Supabase dashboard, not in this
+codebase — `DEMO_MODE` cannot touch them. **Remove those disclaimers by hand**
+when the flag goes false, or you'll have an app that claims to be real sending
+mail that says it isn't.
+
+**`index.html` meta description.** The link preview text says "A portfolio
+project, not a real bank." Same story — edit it directly.
+
 ### Not covered, deliberately
 
 - **Trading** — a `trading` variant exists in `DEMO_NOTICES` but is not mounted.

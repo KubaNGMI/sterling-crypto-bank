@@ -1,7 +1,9 @@
 {
   "detector": {
     "ignoreRules": [],
-    "ignoreFiles": [],
+    "ignoreFiles": [
+      "supabase/email-templates/**"
+    ],
     "ignoreValues": [
       {
         "rule": "overused-font",

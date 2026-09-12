@@ -46,6 +46,16 @@ export default function TransactionHistory({ transactions, loading, onSelectTran
                   <span className={"type-badge type-" + t.type}>
                     {String(t.type).replace("_", " ")}
                   </span>
+                  {/* Narrow screens drop the Status column to make the table
+                      fit, so the badge rides along here instead — stacked, so
+                      it costs height rather than the width we're short of. */}
+                  <span className="status-inline">
+                    {t.status === "pending" ? (
+                      <span className="pending-badge">Pending</span>
+                    ) : (
+                      <span className="completed-badge">Completed</span>
+                    )}
+                  </span>
                 </td>
                 <td>{t.coin_symbol || "FIAT"}</td>
                 <td className={Number(t.usd_amount) >= 0 ? "amount-positive" : "amount-negative"}>
@@ -137,6 +147,25 @@ export default function TransactionHistory({ transactions, loading, onSelectTran
         .amount-negative { color: var(--red); font-weight: 600; }
 
         .history-details-cell { text-align: right; }
+
+        /* The status badge only appears inside the Type cell once the Status
+           column itself is gone — see the media query below. */
+        .status-inline { display: none; }
+
+        /* At 285px of card the full table wants 374px, and .card clips rather
+           than scrolls — so the Details button was cut off and untappable, not
+           merely cramped. Coin and Status come out (102px, enough to fit) and
+           Status reappears stacked under the type badge so nothing is lost.
+           560px matches the breakpoint TrendingMarket and HoldingsList use. */
+        @media (max-width: 560px) {
+          .history-table thead th:nth-child(3),
+          .history-table tbody td:nth-child(3),
+          .history-table thead th:nth-child(5),
+          .history-table tbody td:nth-child(5) { display: none; }
+
+          .status-inline { display: block; margin-top: 6px; }
+          .history-table tbody td { padding: 12px 0; }
+        }
         .history-details-btn {
           font-family: inherit;
           font-size: 12.5px;

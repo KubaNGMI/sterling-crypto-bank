@@ -1,0 +1,93 @@
+<!--
+  Supabase → Authentication → Email Templates → "Confirm signup"
+  Paste the markup below (everything from <table> onward) into the Message body.
+
+  Subject line to use:  Confirm your Sterling Crypto Bank account
+
+  Supabase substitutes {{ .ConfirmationURL }}. Leave it exactly as written.
+
+  Email clients strip <style> blocks and ignore most modern CSS, so this is
+  deliberately table-based with inline styles — ugly source, but it survives
+  Outlook, Gmail and Apple Mail without rearranging itself.
+
+  NOTE: the DEMO_MODE flag in src/config/demo.js does NOT reach this file.
+  It lives in the Supabase dashboard. When this stops being a demo, the
+  disclaimer at the bottom has to be removed here by hand.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f7;margin:0;padding:32px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="width:480px;max-width:100%;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e5e5ee;">
+
+        <tr>
+          <td style="padding:28px 32px 0 32px;">
+            <span style="font-size:19px;font-weight:700;color:#171725;letter-spacing:-0.01em;">
+              <span style="color:#6366f1;">&#8734;</span> Sterling Crypto Bank
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:22px 32px 0 32px;">
+            <h1 style="margin:0 0 12px 0;font-size:20px;line-height:1.35;font-weight:700;color:#171725;">
+              Confirm your email
+            </h1>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#54545f;">
+              You're one click from finishing your account. This link works once and expires in 24 hours.
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="background:#6366f1;border-radius:999px;">
+                  <a href="{{ .ConfirmationURL }}"
+                     style="display:inline-block;padding:13px 28px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;">
+                    Confirm my email
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 32px 0 32px;">
+            <p style="margin:0 0 6px 0;font-size:12.5px;line-height:1.6;color:#8a8a96;">
+              If the button doesn't work, paste this into your browser:
+            </p>
+            <p style="margin:0;font-size:12px;line-height:1.5;word-break:break-all;">
+              <a href="{{ .ConfirmationURL }}" style="color:#6366f1;text-decoration:none;">{{ .ConfirmationURL }}</a>
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:22px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdf6e7;border:1px solid #f0dfb8;border-radius:10px;">
+              <tr>
+                <td style="padding:12px 14px;font-size:12.5px;line-height:1.6;color:#54545f;">
+                  <strong style="color:#b4790a;">This is a demo.</strong>
+                  Sterling Crypto Bank is a portfolio project, not a real bank. Don't
+                  send funds to it or upload real identity documents.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:22px 32px 28px 32px;border-top:1px solid #eeeef3;margin-top:8px;">
+            <p style="margin:18px 0 0 0;font-size:12px;line-height:1.6;color:#9a9aa6;">
+              Didn't sign up? Ignore this email — no account is created until the
+              link above is opened.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
