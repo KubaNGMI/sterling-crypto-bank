@@ -15,7 +15,7 @@
 // and no boolean can do that for you.
 // ===========================================================================
 
-export const DEMO_MODE = true;
+export const DEMO_MODE = false;
 
 // Copy per surface. Each is short, specific to the risk on that screen, and
 // written to be read by someone who is about to hand something over.
