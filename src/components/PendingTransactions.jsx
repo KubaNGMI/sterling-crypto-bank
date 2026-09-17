@@ -1,5 +1,6 @@
 import { COINS, isImageIcon } from "../coins";
 import { formatUsd } from "../utils/format";
+import { supportMailto } from "../config/support";
 
 // Only deposits and coin credits show here — the two "something is coming
 // to me" cases a user would actually want an explanation for. Pending
@@ -65,7 +66,11 @@ export default function PendingTransactions({ transactions }) {
       </div>
 
       <p className="pending-contact">
-        Questions about one of these? Contact support with the date and amount above.
+        Questions about one of these?{" "}
+        <a href={supportMailto("Question about a pending transaction")}>
+          Contact support
+        </a>{" "}
+        with the date and amount above.
       </p>
 
       <style>{`

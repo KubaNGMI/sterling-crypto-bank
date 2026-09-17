@@ -6,6 +6,7 @@ import { useProfile } from "../hooks/useProfile";
 import { GENDER_OPTIONS } from "../utils/identity";
 import Select from "../components/Select";
 import CardLoading from "../components/CardLoading";
+import { supportMailto } from "../config/support";
 
 export default function EditProfile() {
   const { user } = useAuth();
@@ -107,7 +108,11 @@ export default function EditProfile() {
 
             <div className="ep-locked">
               <p className="ep-locked__note">
-                Set at signup — contact support to change these.
+                Set at signup —{" "}
+                <a href={supportMailto("Request a change to my account details")}>
+                  contact support
+                </a>{" "}
+                to change these.
               </p>
               <dl>
                 <div>
@@ -167,6 +172,8 @@ export default function EditProfile() {
           padding-top: 16px;
           margin-top: 2px;
         }
+        .ep-locked__note a { color: var(--accent-text); font-weight: 600; }
+        .ep-locked__note a:hover { text-decoration: underline; }
         .ep-locked__note {
           font-size: 12.5px;
           color: var(--text-muted);
