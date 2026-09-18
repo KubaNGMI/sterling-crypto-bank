@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBankAccounts } from "../../hooks/useBankAccounts";
-import { BANK_REGIONS, maskAccountNumber } from "../../utils/bank";
+import { BANK_REGIONS, branchCodeLabel, maskAccountNumber } from "../../utils/bank";
 import Flag from "../Flag";
 import StatusPill from "../StatusPill";
 import CardLoading from "../CardLoading";
@@ -58,7 +58,8 @@ export default function BankAccounts() {
                   <p className="ba-name">{a.account_name}</p>
                   <p className="ba-sub">
                     {region?.label ?? a.region}
-                    {a.bsb ? ` · BSB ${a.bsb}` : ""} · {maskAccountNumber(a.account_number)}
+                    {a.bsb ? ` · ${branchCodeLabel(a.region) ?? "Branch"} ${a.bsb}` : ""} ·{" "}
+                    {maskAccountNumber(a.account_number)}
                   </p>
                   {rowError?.id === a.id && <p className="ba-row-error">{rowError.text}</p>}
                 </div>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { useAdminBankAccounts } from "../../hooks/useAdminBankAccounts";
-import { BANK_REGIONS, maskAccountNumber } from "../../utils/bank";
+import { BANK_REGIONS, branchCodeLabel, maskAccountNumber } from "../../utils/bank";
 import { personLabel } from "../../utils/identity";
 import StatusPill from "../StatusPill";
 import CardLoading from "../CardLoading";
@@ -88,7 +88,7 @@ export default function AdminBankAccounts({ users }) {
                     <td className="muted">
                       {a.account_name}
                       <br />
-                      {a.bsb ? `BSB ${a.bsb} · ` : ""}
+                      {a.bsb ? `${branchCodeLabel(a.region) ?? "Branch"} ${a.bsb} · ` : ""}
                       {maskAccountNumber(a.account_number)}
                     </td>
                     <td><StatusPill status={a.status} /></td>

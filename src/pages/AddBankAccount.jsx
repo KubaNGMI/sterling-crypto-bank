@@ -6,9 +6,8 @@ import { fullName } from "../utils/identity";
 import Flag from "../components/Flag";
 import {
   BANK_REGIONS,
-  digits,
-  formatBsb,
-  formatNzAccount,
+  formatBranchCode,
+  formatAccountNumber,
   maskAccountNumber,
   validateBankDetails,
 } from "../utils/bank";
@@ -77,9 +76,8 @@ export default function AddBankAccount() {
         region,
         currency: cfg.currency,
         accountName: form.accountName.trim(),
-        bsb: cfg.hasBsb ? formatBsb(form.bsb) : null,
-        accountNumber:
-          region === "NZ" ? formatNzAccount(form.accountNumber) : digits(form.accountNumber),
+        bsb: cfg.branchCode ? formatBranchCode(region, form.bsb) : null,
+        accountNumber: formatAccountNumber(region, form.accountNumber),
         payid: cfg.hasPayId ? form.payid.trim() : null,
         bankName: form.bankName.trim(),
         statementFile,
@@ -150,17 +148,18 @@ export default function AddBankAccount() {
               <small>Must match your verified name.</small>
             </label>
 
-            {cfg.hasBsb && (
+            {cfg.branchCode && (
               <label className="bw-field">
-                <span>BSB</span>
+                <span>{cfg.branchCode.label}</span>
                 <input
                   type="text"
                   inputMode="numeric"
                   value={form.bsb}
-                  onChange={(e) => set("bsb", formatBsb(e.target.value))}
-                  placeholder="123-456"
-                  maxLength={7}
+                  onChange={(e) => set("bsb", formatBranchCode(region, e.target.value))}
+                  placeholder={formatBranchCode(region, "123456")}
+                  maxLength={formatBranchCode(region, "123456").length}
                 />
+                <small>{cfg.branchCode.hint}</small>
               </label>
             )}
 
@@ -170,15 +169,12 @@ export default function AddBankAccount() {
                 type="text"
                 inputMode="numeric"
                 value={form.accountNumber}
-                onChange={(e) =>
-                  set(
-                    "accountNumber",
-                    region === "NZ" ? formatNzAccount(e.target.value) : digits(e.target.value)
-                  )
+                onChange={(e) => set("accountNumber", formatAccountNumber(region, e.target.value))}
+                placeholder={
+                  region === "NZ" ? "12-3456-0012345-00" : "1".repeat(cfg.accountNumber.min)
                 }
-                placeholder={region === "NZ" ? "12-3456-0012345-00" : "12345678"}
               />
-              <small>{cfg.accountNumberHint}</small>
+              <small>{cfg.accountNumber.hint}</small>
             </label>
 
             {cfg.hasPayId && (
@@ -238,7 +234,12 @@ export default function AddBankAccount() {
             <dl className="bw-review">
               <div><dt>Region</dt><dd>{cfg.label} ({cfg.currency})</dd></div>
               <div><dt>Account name</dt><dd>{form.accountName.trim()}</dd></div>
-              {cfg.hasBsb && <div><dt>BSB</dt><dd>{formatBsb(form.bsb)}</dd></div>}
+              {cfg.branchCode && (
+                <div>
+                  <dt>{cfg.branchCode.label}</dt>
+                  <dd>{formatBranchCode(region, form.bsb)}</dd>
+                </div>
+              )}
               <div>
                 <dt>Account number</dt>
                 <dd>{maskAccountNumber(form.accountNumber)}</dd>
